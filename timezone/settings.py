@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'whitenoise.runserver_nostatic',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -79,15 +81,15 @@ WSGI_APPLICATION = 'timezone.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'NAME': BASE_DIR / 'db.sqlite3',  # Assuming db.sqlite3 is in the project directory
     }
 }
 
-
-# DATABASES["default"] = dj_database_url.parse("postgres://vishnudas_user:i6m7wpc7dB1GnZ8vabQccvtip0StCOFc@dpg-co19sevjbltc7396324g-a.oregon-postgres.render.com/vishnudas")
+DATABASES["default"] = dj_database_url.parse("postgres://mysuperuser:0f2rAVNRos7XQ59H60RTEA3rqr4apAes@dpg-co1guri0si5c73coiin0-a.oregon-postgres.render.com/backendcourse_qqqc")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -153,3 +155,13 @@ EMAIL_USE_SSL = False
 
 PAYPAL_RECEIVER_EMAIL ='sb-e6kbo29124735@business.example.com'
 PAYPAL_TEST = True
+
+AWS_ACCESS_KEY_ID = 'AKIA2UC3B3V744K3IUM4'
+AWS_SECRET_ACCESS_KEY = 'XWxkl3hbk4D5EqLOEKI3t2hADLQKeJJb2GcX1rCB'
+AWS_STORAGE_BUCKET_NAME = 'backendcours'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'us-east-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERITY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

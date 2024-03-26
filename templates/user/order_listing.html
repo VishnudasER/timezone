@@ -1,0 +1,77 @@
+<!-- user/order_listing.html -->
+
+{% extends 'user/base.html' %}
+
+{% block content %}
+<section class="h-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-10 col-xl-8">
+                <div class="card" style="border-radius: 10px;">
+                    <div class="card-header px-4 py-5 text-center">
+                        <h5 class="text-muted mb-0">My Orders</h5>
+                    </div>
+                    {% for ord in order %}
+                        <div class="card shadow-0 border mb-4">
+                            <div class="card-body">
+                                {% if forloop.first %}
+                                    <div class="row align-items-center border-bottom mb-3 pb-2">
+                                        <div class="col-md-2 text-center">
+                                            <h6>Image</h6>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h6>Ordered</h6>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h6>Method</h6>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h6>Status</h6>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h6>Actions</h6>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if forloop.first %}
+        <div class="row align-items-center border-bottom mb-3 pb-2">
+            <!-- ... your header code ... -->
+        </div>
+    {% endif %}
+    {% for item in ord.items.all %}
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="{{ item.product.image1.url }}" class="img-fluid" alt="Product Image" width="50px">
+            </div>
+            <div class="col-md-2 text-center">
+                <p class="text-muted mb-0 small">{{ ord.created }}</p>
+            </div>
+                                    <div class="col-md-2 text-center">
+                                        <p class="text-muted mb-0 small">{{ ord.billing_status }} </p>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <p class="text-muted mb-0 small">{{ ord.status }}</p>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <a href="{% url 'order_detailview' ord.id  %}" class="btn btn-outline-primary btn-sm">Track</a>
+                                    </div>
+                                    {% if ord.status == 'confirmed' %}
+                                    {% if ord.active %}
+                                        <a href="{% url 'cancel_order' ord.id %}" class="btn btn-success btn-sm">Cancel</a>
+                                    {% else %}
+                                        <span class="text-danger small">Cancelled</span>
+                                    {% endif %}
+                                {% elif ord.status == 'delivered' %}
+                                    <a href="{% url 'return_order' ord.id %}" class="btn btn-success btn-sm">Return</a>
+                                {% endif %}
+                                </div>
+                                 {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+</section>
+{% endblock %}

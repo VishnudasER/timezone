@@ -1,0 +1,369 @@
+{% extends 'user/base.html' %}
+{% block content %}
+   <style>
+      @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+      
+
+      
+
+      .card {
+         position: relative;
+         display: -webkit-box;
+         display: -ms-flexbox;
+         display: flex;
+         -webkit-box-orient: vertical;
+         -webkit-box-direction: normal;
+         -ms-flex-direction: column;
+         flex-direction: column;
+         min-width: 0;
+         word-wrap: break-word;
+         background-color: #fff;
+         background-clip: border-box;
+         border: 1px solid rgba(0, 0, 0, 0.1);
+         border-radius: 0.10rem
+      }
+
+      .card-header:first-child {
+         border-radius: calc(0.37rem - 1px) calc(0.37rem - 1px) 0 0
+      }
+
+      .card-header {
+         padding: 0.75rem 1.25rem;
+         margin-bottom: 0;
+         background-color: #fff;
+         border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+      }
+
+      .track {
+         position: relative;
+         background-color: #ddd;
+         height: 7px;
+         display: -webkit-box;
+         display: -ms-flexbox;
+         display: flex;
+         margin-bottom: 60px;
+         margin-top: 50px
+      }
+
+      .track .step {
+         -webkit-box-flex: 1;
+         -ms-flex-positive: 1;
+         flex-grow: 1;
+         width: 25%;
+         margin-top: -18px;
+         text-align: center;
+         position: relative
+      }
+
+      .track .step.active:before {
+         background: #FF5722
+      }
+
+      .track .step::before {
+         height: 7px;
+         position: absolute;
+         content: "";
+         width: 100%;
+         left: 0;
+         top: 18px
+      }
+
+      .track .step.active .icon {
+         background: #ee5435;
+         color: #fff
+      }
+
+      .track .icon {
+         display: inline-block;
+         width: 40px;
+         height: 40px;
+         line-height: 40px;
+         position: relative;
+         border-radius: 100%;
+         background: #ddd
+      }
+
+      .track .step.active .text {
+         font-weight: 400;
+         color: #000
+      }
+
+      .track .text {
+         display: block;
+         margin-top: 7px
+      }
+
+      .itemside {
+         position: relative;
+         display: -webkit-box;
+         display: -ms-flexbox;
+         display: flex;
+         width: 100%
+      }
+
+      .itemside .aside {
+         position: relative;
+         -ms-flex-negative: 0;
+         flex-shrink: 0
+      }
+
+      .img-sm {
+         width: 80px;
+         height: 80px;
+         padding: 7px
+      }
+
+      ul.row,
+      ul.row-sm {
+         list-style: none;
+         padding: 0
+      }
+
+      .itemside .info {
+         padding-left: 15px;
+         padding-right: 7px
+      }
+
+      .itemside .title {
+         display: block;
+         margin-bottom: 5px;
+         color: #212529
+      }
+
+      p {
+         margin-top: 0;
+         margin-bottom: 1rem
+      }
+
+      .btn-warning {
+         color: #ffffff;
+         background-color: #ee5435;
+         border-color: #ee5435;
+         border-radius: 1px
+      }
+
+      .btn-warning:hover {
+         color: #ffffff;
+         background-color: #ff2b00;
+         border-color: #ff2b00;
+         border-radius: 1px
+      }
+   </style>
+
+
+
+   <section class="h-100 gradient-custom">
+      <div class="container py-5 h-50">
+         <div class="row container d-flex justify-content-center align-items-center h-50">
+            <div class="">
+               <div class="row">
+                 
+                  <div class=" col-md-8" style="border-radius: 10px;">
+                     <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                           <p class="lead fw-normal mb-0" style="color: #1243ad;">Receipt</p>
+                           <a href="{% url 'download_invoice' id=order.id %}" download>
+                            <button type="button" class="btn btn-outline-primary btn-sm">Download Invoice</button>
+                        </a>
+                        </div>
+                        {% for item in order.items.all %}
+
+
+                           <div class="card shadow-0 border mb-4">
+                              <div class="card-body">
+                                 <div class="row">
+                                    <div class="col-md-4">
+                                       <img src="{{ item.product.image1.url }}" class="img-fluid"
+                                          alt="Phone" width="150px">
+                                    </div>
+                                    <div class="col-md-8  justify-content-center align-items-center">
+                                       <p class=""><b>{{ item.product }}</b></p>
+                                       <p class="text-muted mb-0 small">Order.id : {{ item.id }}</p>
+                                       <p class="text-muted mb-0 small">Qty:{{ item.quantity }}</p>
+                                       <p class="">Amount : {{ item.price }}</p>
+
+                                    </div>
+                                 </div>
+                                 <div class="text-end">
+                                    {{ item.order.status }}
+                                 </div>
+                                
+                                
+                                 
+                              </div>
+                           </div>
+
+                        
+                           <!-- <% if(retn == null){ %>
+                              <a href="#" onclick="returnOrder('<%= odrDetail._id %>' )" class="btn btn-outline-danger btn-sm">return Order</a>
+                           <% }else if(retn.status == 'requested'){ %>
+                              <span class="badge bg-info text-dark">Requested for return</span>
+                           <% }else{ %>
+                              <span class="badge bg-warning text-light">Order Returned</span>
+                           <% } %> -->
+                           
+
+                     </div>
+                  </div>
+                  <!-- </div> -->
+
+                  <!-- Additional Column -->
+
+                  <div class="container">
+                     <div class="row">
+                         <div class="col-md-5">
+                             <!-- Order Summary Card -->
+                             <div class="card border shadow-none">
+                                 <div class="card-header bg-transparent border-bottom py-3 px-4">
+                                     <h5 class="font-size-16 mb-0">Order Summary <span class="float-end"> </span></h5>
+                                 </div>
+                                 <div class="card-body p-4 pt-2">
+                                     <div class="table-responsive">
+                                         <table class="table mb-0">
+                                             <tbody>
+                                                 <tr>
+                                                     <td>Sub Total :</td>
+                                                     <td class="text-end text-success">$ {{ item.price|floatformat:0 }}</td>
+                                                 </tr>
+                                                 <tr>
+                                                     <td>Discount :</td>
+                                                     <td class="text-end text-success">- ${{ discount_amount|floatformat:0 }}</td>
+                                                 </tr>
+                                                 <tr>
+                                                     <td>Shipping Charge :</td>
+                                                     <td class="text-end text-success">+ $ {{ shipping_charge|floatformat:0 }}</td>
+                                                 </tr>
+                                                 <tr>
+                                                     <td>Estimated Tax:</td>
+                                                     <td class="text-end text-success">+ $ {{ estimated_tax|floatformat:0 }}</td>
+                                                 </tr>
+                                                 <tr class="bg-light">
+                                                     <th>Total :</th>
+                                                     <td class="text-end">
+                                                         <span class="fw-bold">
+                                                             <b>$  {{ request.session.new_price|floatformat:0 }}</b>
+                                                         </span>
+                                                     </td>
+                                                 </tr>
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                     <!-- end table-responsive -->
+                                 </div>
+                             </div>
+                         </div>
+                 
+                         <div class="col-md-5">
+                         
+
+                             <!-- User Address Card -->
+                           
+        <div class="card border shadow-none mt-4">
+            <div class="card-header bg-transparent border-bottom py-3 px-4">
+                <h5 class="font-size-16 mb-0"> <span class="float-end"> </span></h5>
+            </div>
+            <div class="card-body p-4 pt-2" style="margin-top: -15px;"> <!-- Adjust the value as needed -->
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <tbody>
+                            <p class="text-uppercase small"><strong>Name:</strong> {{ selected_address.first_name }}{{ selected_address.last_name }}</p>
+                            <p   ><strong>Address:</strong>{{ selected_address.address }}</p>
+                            <p><strong>Address 1:</strong> {{ selected_address.address1 }}</p>
+                            <p><strong>City: </strong>{{selected_address.city }}</p>
+                            <p><strong>Zipcode: </strong>{{ selected_address.zipcode }}</p>
+                            <p><strong>Phone: </strong> {{ selected_address.phone }}</p>
+                        </tbody>
+                              </table>
+                           </div>
+                           <!-- end table-responsive -->
+                        </div>
+                     </div>
+                  </div>
+                
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <div class="container">
+      <article class="card">
+          <header class="card-header"> My Orders / Tracking </header>
+          <div class="card-body">
+              <h6>Order ID:  {{ item.id }}   </h6>
+              <article class="card">
+                  <div class="card-body row">
+                      <div class="col"> <strong>Estimated Delivery time:</strong> <br>29 nov 2024 </div>
+                      <div class="col"> <strong>Shipping BY:</strong> <br>TIMEZONE | <i class="fa fa-phone"></i> +91 8989393187 </div>
+                      <div class="col">
+                        <strong>Status:</strong> <br>
+                        <span class="capitalize-first">{{ item.order.status }}</span>
+                      </div>
+                      <div class="col"> <strong>Tracking #:</strong> <br> BD045903594059 </div>
+                  </div>
+              </article>
+              {% for ord in order.product.all %}
+    <div class="track">
+        {% if ord.billing_status == 'confirmed' %}
+            <div class="step active">
+                <span class="icon"><i class="fa fa-check"></i></span>
+                <span class="text">Order confirmed</span>
+                {% if ord.active %}
+                    <a href="{% url 'cancel_order' ord.id %}" class="btn btn-success btn-sm">Cancel</a>
+                {% else %}
+                    <span class="text-danger small">Cancelled</span>
+                {% endif %}
+            </div>
+        {% elif ord.billing_status == 'shipped' %}
+            <div class="step active">
+                <span class="icon"><i class="fa fa-user"></i></span>
+                <span class="text">Picked by courier</span>
+            </div>
+        {% elif ord.billing_status == 'out_for_delivery' %}
+            <div class="step">
+                <span class="icon"><i class="fa fa-truck"></i></span>
+                <span class="text">On the way</span>
+            </div>
+        {% elif ord.billing_status == 'delivered' %}
+            <div class="step">
+                <span class="icon"><i class="fa fa-box"></i></span>
+                <span class="text">Ready for pickup</span>
+            </div>
+        {% elif ord.billing_status == 'cancelled' %}
+            <div class="step">
+                <span class="icon"><i class="fa fa-ban"></i></span>
+                <span class="text">Cancelled</span>
+            </div>
+        {% else %}
+            <div class="step">
+                <span class="icon"><i class="fa fa-question"></i></span>
+                <span class="text">Unknown status</span>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+
+           </div>
+              <hr>
+              <ul class="row">
+                  <li class="col-md-4">
+                      <figure class="itemside mb-3">
+                          <div class="aside"><img src="{{ item.product.image1.url }}" class="img-sm border"></div>
+                          <figcaption class="info align-self-center">
+                              <p class="title">{{ item.product }}<br>{{ item.product.brand }}</p> <span class="text-muted">$ {{ new_price|floatformat:0 }} </span>
+                          </figcaption>
+                      </figure>
+                  </li>
+                 
+              </ul>
+              <hr>
+              <a href="#" class="btn btn-warning" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to orders</a>
+          </div>
+      </article>
+  </div>
+  {% endfor %}
+               
+
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock %}

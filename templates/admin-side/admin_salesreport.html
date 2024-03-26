@@ -1,0 +1,134 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+<p>jij</p>
+<p>ss</p>
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Total Sales</h4>
+                    <p class="text-center">Total Sales: ${{ total_sales }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Total Quantity Sold</h4>
+                    <p class="text-center">{{ item_quantity_sold }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Total Discount</h4>
+                    <p class="text-center">${{ total_discount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% if applied_coupon %}
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Applied Coupon</h4>
+                        <p class="text-center">${{ applied_coupon.coupon }} - Discount: {{ applied_coupon.coupon.discount_price }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <h4 class="card-title text-center text-muted my-2"><u>Orders</u></h4>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form action="{% url 'filter_salesreport' %}" method="post" hx-post="{% url 'filter_salesreport' %}" hx-target="#order-listing" class="row g-3 align-items-center">
+                                {% csrf_token %}
+                                <div class="col-md-4">
+                                    <label for="start_date" class="visually-hidden">Start Date:</label>
+                                    <input type="date" id="start_date" name="start_date" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="end_date" class="visually-hidden">End Date:</label>
+                                    <input type="date" id="end_date" name="end_date" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-outline">Filter</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="customer_filter" class="visually-hidden">Customer:</label>
+                                    <input type="text" id="customer_filter" name="customer_filter" class="form-control" placeholder="Customer">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="status_filter" class="visually-hidden">Status:</label>
+                                    <input type="text" id="status_filter" name="status_filter" class="form-control" placeholder="Status">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <form action="{% url 'salesreport' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="generate_pdf" class="btn btn-sm btn-success">Generate PDF</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="example">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total Paid</th>
+                                    <th>Total Discount</th>
+                                    <th>Status</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity Sold</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ord in order %}
+                                    {% for item in order_items %}
+                                        {% if ord.id == item.order.id %}
+                                            <tr>
+                                                <td>{{ ord.id }}</td>
+                                                <td>{{ ord.user.username }}</td>
+                                                <td>${{ ord.total_paid }}</td>
+                                                <td>${{ item.discount }}</td>
+                                                <td>{{ ord.status }}</td>
+                                                <td>{{ item.product.title }}</td>
+                                                <td>${{ item.price }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td>{{ ord.created }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.js"></script>
+
+<script>
+    new DataTable('#example', {
+    select: true
+});</script>
+{% endblock %}

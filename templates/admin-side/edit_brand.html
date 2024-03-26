@@ -1,0 +1,45 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Edit Your Brand</h1>
+
+    <form method="post" action="{% url 'edt_brand_action' %}" class="border border-dark rounded p-4" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" value="{{brand.id}}" name="id">
+        <div class="form-group">
+            <label for="edit_brand">Edit Brand</label>
+            <input value="{{brand.title}}" type="text" name="editbrand" id="editbrand" class="form-control" oninput="validateBrandInput()" required>
+            <div id="brandError" class="text-danger"></div>
+        </div>
+
+        <div class="text-right mt-3">
+            <button type="submit" id="submitBtn" class="btn btn-success" disabled>Edit Brand</button>
+        </div>
+    </form>
+
+    <script>
+        function validateBrandInput() {
+            var brandInput = document.getElementById('editbrand');
+            var brand = brandInput.value.trim();
+            var errorDiv = document.getElementById('brandError');
+            var submitBtn = document.getElementById('submitBtn');
+
+            // Check for space validation
+            if (brand.includes('  ')) {
+                errorDiv.innerHTML = 'Brand cannot contain more than one consecutive space.';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Check for empty or only spaces
+            if (brand === '') {
+                errorDiv.innerHTML = 'Brand cannot be empty or contain only spaces.';
+                submitBtn.disabled = true;
+            } else {
+                errorDiv.innerHTML = '';
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</div>
+{% endblock %}

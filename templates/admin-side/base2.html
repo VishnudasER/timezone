@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://www.cssscript.com/demo/sticky.css" rel="stylesheet" type="text/css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
+      rel="stylesheet"/>
+    
+    <title>Expanding Sidebar Navigation Example</title>
+   
+  </head>
+  <style>
+    :root {
+        --body-bg-color: #dce4e3;
+        --green: #18c29c;
+        --light-green: #8ed7c6;
+        --light-grey: #dce4e3;
+        --text-color: #084236;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      
+      body {
+        background-color: var(--body-bg-color);
+      }
+      
+      .container {
+        display: flex;
+        justify-content: right;
+        height: 100vh;
+        width: auto;
+        gap: 20px;
+      }
+      
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 78px;
+        height: 100vh;
+        background-color: var(--green);
+        padding-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s;
+      }
+      
+      .main {
+        width: calc(100% - 78px);
+        height: 100vh;
+        padding: 20px;
+        color: var(--text-color);
+        transition: all 0.2s;
+      }
+      
+      .icon {
+        width: 50px;
+        height: 50px;
+        background-color: var(--green);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        font-size: 1rem;
+        padding: 15px;
+        gap: 15px;
+        transition: all 0.2s;
+      }
+      
+      .icon:hover {
+        background-color: var(--light-green) !important;
+        cursor: pointer;
+      }
+      
+      .menu-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+      
+      .menu-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        padding-top: 15px;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+      
+      .icon-logout {
+        width: 100%;
+        height: 60px;
+        background-color: var(--light-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+      }
+      
+      .icon-logout:hover {
+        background-color: var(--light-grey);
+        cursor: pointer;
+      }
+      
+      .main h1 {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      
+      .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: var(--light-green);
+        align-items: center;
+        font-size: 0.9rem;
+        gap: 10px;
+      }
+      
+      .logout-container #logout-photo {
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+      }
+      
+      #user-container {
+        display: flex;
+        flex-direction: column;
+        gap: -5px;
+      }
+      
+      #user-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      
+      #user-role {
+        font-size: 0.7rem;
+        font-weight: 400;
+      }
+      
+  </style>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <ul class="menu-list">
+          <li>
+            <div class="menu-container">
+              <button class="icon" id="menu">
+                <img src="./assets/images/menu.svg" alt="menu" />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button class="icon" id="search">
+              
+            </button>
+          </li>
+          
+          <li>
+            <button class="icon" id="pets">
+              <img src="./assets/images/pet.svg" alt="pets" />
+            </button>
+          </li>
+          <li>
+            <button class="icon" id="clients">
+              <img src="./assets/images/user.svg" alt="clients" />
+            </button>
+          </li>
+          <li>
+            <button class="icon" id="vets">
+              <img src="./assets/images/vet.svg" alt="vets" />
+            </button>
+          </li>
+          <li>
+            <button class="icon" id="settings">
+              <img src="./assets/images/settings.svg" alt="settings" />
+            </button>
+          </li>
+        </ul>
+        <div class="logout-container">
+          <button class="icon-logout">
+            <img src="./assets/images/log-out.svg" alt="logout" />
+          </button>
+        </div>
+      </aside>
+      <section class="main">
+        <h1>Expanding Sidebar Navigation Example</h1>
+        <div style="margin:20px auto;"><div id="carbon-block"></div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2783044520727903"
+     crossorigin="anonymous"></script>
+<!-- CSSScript Demo Page -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2783044520727903"
+     data-ad-slot="3025259193"></ins>
+     <script src="{% static 'js/base2.js' %}"></script>
+     
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+        <p>A minimal, clean, mobile-friendly expanding sidebar navigation template built on top of JavaScript and CSS.</p>
+      </section>
+    </div>
+  </body>
+  <script src="script.js"></script>
+  <script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CE7DC2JW&placement=wwwcssscriptcom";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LLWL5N9CSM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LLWL5N9CSM');
+</script>
+</html>

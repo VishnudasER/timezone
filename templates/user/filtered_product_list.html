@@ -1,0 +1,34 @@
+
+{% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+    <div class="container">
+  <div class="row">
+      {% for product in product %}
+      <div class="col-lg-4 col-md-6 mb-4">
+          <a href="{% url 'product_view' product.id %}" class="link-light" style="color: black ; "
+              id="double-click-button">
+        <div class="card h-100">
+          <img src="{{ product.image1.url }}" class="card-img-top" style="height: 280px; width: 100%;"
+            alt="{{ product.Product_Name }}">
+          <div class="card-body">
+              <h5 class="card-title">{{ product.title }}</h5>
+              <p class="card-text"><strong>Brand:</strong> {{ product.brand }}</p>
+              <p class="card-text"><strong>Price:</strong> ₹ {{ product.price }}</p>
+              <p>Old Price: {{product.old_price}}</p>
+              <div class="d-flex justify-content-between">
+              <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success mt-2">Add To Cart</a>
+                <i class="fa-regular fa-heart align-middle" style="color: #2F3C7E; font-size: 22px;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>

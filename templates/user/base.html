@@ -1,0 +1,280 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title> Daily Products | {% block title %}
+        {% endblock title %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static '/img/favicon.ico' %}">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href= "{% static '/css/bootstrap.min.css' %}" >
+    <link rel="stylesheet" href= "{% static '/css/owl.carousel.min.css' %}" >
+    <link rel="stylesheet" href= "{% static '/css/flaticon.css' %}">
+    <link rel="stylesheet" href= "{% static '/css/slicknav.css' %}">
+    <link rel="stylesheet" href= "{% static '/css/animate.min.css' %}">
+    <link rel="stylesheet" href= "{% static '/css/magnific-popup.css' %}"> 
+    <link rel="stylesheet" href= "{% static '/css/fontawesome-all.min.css' %}">  
+    <link rel="stylesheet" href= "{% static '/css/themify-icons.css' %}">  
+    <link rel="stylesheet" href= "{% static '/css/slick.css' %}">  
+    <link rel="stylesheet" href= "{% static '/css/nice-select.css' %}">  
+    <link rel="stylesheet" href= "{% static '/css/style.css' %}"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-GLhlTQ8iN17RoD/ZL8FIqGgBtFjF3CO9QDbtjQqQfH30sZpVvnn5uwoicU8C6sN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<body>
+   
+    <!--? Preloader Start -->
+   
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{% static 'img/logo/logo.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preloader Start -->
+    <header>
+        <!-- Header Start -->
+        <div class="header-area">
+            <div class="main-header header-sticky">
+                <div class="container-fluid">
+                    <div class="menu-wrapper">
+                        <!-- Logo -->
+                        <div class="logo">
+                            <a href="{% url 'home' %}"><img src= "{% static 'img/logo/logo.png' %}" alt=""></a>
+                            
+                        </div>
+                        <form action="{% url 'search_products' %}" method="GET" class="mx-2">
+                            <div class="input-group rounded">
+                              <input type="search" name="search" class="form-control rounded" placeholder="Search" aria-label="Search" />
+                              <span class="input-group-text border-0" id="search-addon">
+                                <button class="bg-dark" type="submit" style="border:None;background-color:"><i class="fas fa-search"></i></button>
+                              </span>
+                            </div>
+                          </form>
+                        
+                        
+                          
+                        <!-- Main-menu -->
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>                                                
+                                <ul id="navigation">  
+                                    <li><a href="{% url 'home' %}">Home</a></li>
+                                    <li><a href="#">shop</a></li>
+                                    <li><a href="#">about</a></li>
+                                    <li class=""><a href="{% url 'products' %}">Products</a>
+                                        <ul class="dropdown-menu">
+                                            {% for cat in cat %}
+                                              <li><a class="dropdown-item" href="{% url 'category_search' cat.id %}">{{cat.title}}</a></li>
+                                            {% endfor %}
+                                            
+                                          </ul>
+                                    </li>
+                                    <li><a href="{% url 'products' %}">Filter</a>
+                                        <ul class="submenu">
+                                            <li><a href="#">Blog</a></li>
+                                            <li><a href="#">Blog Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Pages</a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'login_perform' %}">Login</a></li>
+                                            <li> <a class="navbar-brand" href="{% url 'sign_up' %}" id="menu-cart-button">
+                                                <i class="fa-solid fa-cart-shopping"></i> 
+                                                <div id="basket-qty" class="d-inline-flex">Signup</div></a></li>
+                                           
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Profile</a>
+                                        <ul class="submenu">
+                                            {% if request.user.is_authenticated %}
+                                                <li><a href="{% url 'user_profile' %}">{{ request.user.username|title }}</a></li>
+                                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                                <li><a href="{% url 'order_listing' %}">My Orders</a></li>
+                                                <li><a href="{% url 'view_coupons' %}">Coupons</a></li>
+                                                <li><a class="navbar-brand" href="{% url 'cart' %}" id="menu-cart-button">
+                                                        <i class="fa-solid fa-cart-shopping"></i>
+                                                        <div id="basket-qty" class="d-inline-flex">Cart</div>
+                                                    </a>
+                                                </li>
+                                                <li class="submenu-divider"></li>
+                                                <li><a href="{% url 'log_out' %}" class="submenu-item">Logout</a></li>
+                                            {% else %}
+                                                <li><a href="{% url 'login_perform' %}" class="submenu-item">Login</a></li>
+                                                <li><a href="{% url 'sign_up' %}" class="submenu-item">Signup</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </li>
+                                    
+                                        </ul>
+                                    </li>
+                            </nav>
+                        </div>
+                        <!-- Header Right -->
+                        <div class="header-right">
+                            <ul>
+                              
+                                
+                            </ul>
+                        </div>
+                        
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+    </header>
+                       
+
+
+
+</div>
+{% block content %}
+
+{% endblock %}
+
+     
+
+    <footer>
+        <!-- Footer Start-->
+        <div class="footer-area footer-padding">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
+                        <div class="single-footer-caption mb-50">
+                            <div class="single-footer-caption mb-30">
+                                <!-- logo -->
+                                <div class="footer-logo">
+                                    <a href="index.html"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                                </div>
+                                <div class="footer-tittle">
+                                    <div class="footer-pera">
+                                        <p><i>"Watches don't just tell time , they capture moments"</i></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Quick Links</h4>
+                                <ul>
+                                    <li><a href="#">New watches 2023</a></li>
+                                    <li><a href="#">Men's watches</a></li>
+                                    <li><a href="#"> Get CouponWomen's watches</a></li>
+                                    <li><a href="#">Gold watches</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>New Products</h4>
+                                <ul>
+                                    <li><a href="#">Datejust</a></li>
+                                    <li><a href="#">Lady-Datejust</a></li>
+                                    <li><a href="#">GMT-Master II</a></li>
+                                    <li><a href="#">Deepsea</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Support</h4>
+                                <ul>
+                                    <li><a href="#">Frequently Asked Questions</a></li>
+                                    <li><a href="#">Terms & Conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Report a Payment Issue</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer bottom -->
+                <div class="row align-items-center">
+                    <div class="col-xl-7 col-lg-8 col-md-7">
+                       
+                    </div>
+                 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End-->
+    </footer>
+    <!--? Search model Begin -->
+    <div class="search-model-box">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-btn">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Searching key.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search model end -->
+  
+    <!-- JS here -->
+    
+
+    <script src= "{% static 'js/vendor/modernizr-3.5.0.min.js' %}"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src= "{% static 'js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src=  "{% static 'js/popper.min.js' %}"></script>  
+    <script src=  "{% static 'js/bootstrap.min.js' %}"></script>  
+    <!-- Jquery Mobile Menu -->
+    <script src=   "{% static 'js/jquery.slicknav.min.js' %}"></script>   
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src=   "{% static 'js/owl.carousel.min.js' %}"></script>   
+    
+    <script src=   "{% static 'js/slick.min.js' %}"></script>   
+
+    <!-- One Page, Animated-HeadLin -->
+    <script src=   "{% static 'js/wow.min.js' %}"></script>   
+    <script src=   "{% static 'js/animated.headline.js' %}"></script>   
+    <script src=   "{% static 'js/jquery.magnific-popup.js' %}"></script>   
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script src=     "{% static 'js/jquery.scrollUp.min.js' %}"></script> 
+    <script src=     "{% static 'js/jquery.nice-select.min.js' %}"></script> 
+    <script src=   "{% static 'js/jquery.sticky.js' %}"></script>    
+    
+    <!-- contact js -->
+    <script src=   "{% static 'js/contact.js' %}"></script>    
+    <script src=   "{% static 'js/jquery.form.js' %}"></script>    
+    <script src=   "{% static 'js/jquery.validate.min.js' %}"></script>    
+    <script src=   "{% static 'js/mail-script.js' %}"></script>   
+    <script src=    "{% static 'js/jquery.ajaxchimp.min.js' %}"></script>   
+    
+    <!-- Jquery Plugins, main Jquery -->	
+    <script src=     "{% static 'js/plugins.js' %}"></script> 
+    <script src=   "{% static 'js/main.js' %}"></script>    
+    <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    
+</body>
+</html>
+
+

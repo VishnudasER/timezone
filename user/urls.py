@@ -1,0 +1,41 @@
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+    path("",views.home,name='home'),
+    path("vishnu/", views.vishnu),
+    path("sign_up",views.sign_up, name='sign_up'),
+    path("signup_perform",views.signup_perform, name='signup_perform'),
+    path("otp",views.otp, name='otp'),
+    path("otp_perform",views.otp_perform, name='otp_perform'),
+    path("resend_otp",views.resend_otp, name='resend_otp'),
+    path("category_search/<int:uid>",views.category_search, name='category_search'),
+    path("search",views.search, name='search'),
+    path("view_product/<int:pid>",views.view_product, name='view_product'),
+    path("log_out",views.log_out, name='log_out'),
+    path("login_perform",views.login_perform, name='login_perform'),
+    path("product",views.product),
+    path("product_view/<id>",views.product_view,name='product_view'),
+    path("products_view/<id>",views.products_view,name='products_view'),
+    path("user_profile",views.user_profile,name='user_profile'),
+    path('edit_username_action',views.edit_username_action, name='edit_username_action'),
+    path('change_password',views.change_password, name='change_password'),
+    path('for_otp',views.for_otp, name='for_otp'),
+    path('forget_otp',views.forget_otp, name='forget_otp'),
+    path('resend_otp_forgot',views.resend_otp_forgot, name='resend_otp_forgot'),
+    path('forgot_password_action',views.forgot_password_action, name='forgot_password_action'),
+    path('new_password', views.new_password, name='new_password'),
+    path('add_address', views.add_address, name='add_address'),
+    path('add_address_perform', views.add_address_perform, name='add_address_perform'),
+    path('delete_address/<int:address_id>/',views.delete_address, name='delete_address'),
+    path('update_address/<int:address_id>/',views.update_address, name='update_address'),
+    path('edit_address_page/<int:address_id>/',views.edit_address_page, name='edit_address_page'),
+    path('price_filter',views.price_filter,name='price_filter'),
+    path('products',views.products,name='products'),
+    path('coupons', views.view_coupons, name='view_coupons'),
+    path('search/',views.search_products, name='search_products'),
+    path('index/', views.index, name='index'), 
+    path('likepost/', views.likePost, name='likepost'),
+  
+]

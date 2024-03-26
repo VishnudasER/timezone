@@ -1,0 +1,84 @@
+{% extends 'user/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% block content %}
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="container d-flex justify-content-center">
+        <div class="alert alert-danger alert-dismissible fade show text-center w-50" role="alert">
+            <strong>Error! </strong>{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    {% endfor %}
+    {%endif%}
+
+    <main>
+
+        <section class="vh-100 bg-image"
+            style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+            <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+                <div class="container h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                            <div class="card" style="border-radius: 15px;">
+                                <div class="card-body p-5">
+                                    <h2 class="text-uppercase text-center mb-5">Log In</h2>
+
+                                    <form action="{% url 'login_perform' %}" method="post">
+                                        {% csrf_token %}
+
+
+                                        <div class="form-outline mb-4">
+                                            <input type="text" class="form-control" id="username" name="username"
+                                                required />
+                                            <label class="form-label" for="form3Example3cg">username</label>
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="password" id="form3Example4cg"
+                                                class="form-control form-control-lg" name="password"/>
+                                            <label class="form-label" for="form3Example4cg">Password</label>
+                                        </div>
+
+
+
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit"
+                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Login</button>
+                                        </div>
+                                        <a href="{% url 'for_otp' %}">Forgot your password?</a>
+
+
+                                 
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <p class="text-muted">Don't have an account?
+                                            <a href="{% url 'sign_up' %}" class="btn btn-primary ml-2"
+                                                style="font-size: 14px; padding: 20px 12px;">Sign Up</a>
+                                        </p>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        {% endblock %}
+</body>
+
+</html>

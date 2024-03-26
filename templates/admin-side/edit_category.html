@@ -1,0 +1,45 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Edit Your Category</h1>
+
+    <form method="post" action="{% url 'edt_category_action' %}" class="border border-dark rounded p-4" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" value="{{category.id}}" name="id">
+        <div class="form-group">
+            <label for="new_category">Edit Category</label>
+            <input value="{{category.title}}" type="text" name="newcategory" id="newcategory" class="form-control" oninput="validateCategoryInput()" required>
+            <div id="categoryError" class="text-danger"></div>
+        </div>
+
+        <div class="text-right mt-3">
+            <button type="submit" id="submitBtn" class="btn btn-success" disabled>Edit Category</button>
+        </div>
+    </form>
+
+    <script>
+        function validateCategoryInput() {
+            var categoryInput = document.getElementById('newcategory');
+            var category = categoryInput.value.trim();
+            var errorDiv = document.getElementById('categoryError');
+            var submitBtn = document.getElementById('submitBtn');
+
+            // Check for space validation
+            if (category.includes('  ')) {
+                errorDiv.innerHTML = 'Category cannot contain more than one consecutive space.';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Check for empty or only spaces
+            if (category === '') {
+                errorDiv.innerHTML = 'Category cannot be empty or contain only spaces.';
+                submitBtn.disabled = true;
+            } else {
+                errorDiv.innerHTML = '';
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</div>
+{% endblock %}

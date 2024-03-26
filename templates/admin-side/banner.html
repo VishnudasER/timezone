@@ -1,0 +1,162 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banners</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <p>s</p>
+    <p>s</p>
+    <h2>Banners</h2>
+    <!-- List of Banners -->
+    <div id="bannerList">
+        <!-- Banners will be listed here dynamically -->
+    </div>
+
+    <!-- Add Banner Modal -->
+    <div class="modal fade" id="addBannerModal" tabindex="-1" role="dialog" aria-labelledby="addBannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for adding a new banner -->
+                    <form id="addBannerForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" id="title" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image:</label>
+                            <input type="file" class="form-control-file" id="image" name="image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Banner Modal -->
+    <div class="modal fade" id="editBannerModal" tabindex="-1" role="dialog" aria-labelledby="editBannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBannerModalLabel">Edit Banner</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for editing an existing banner -->
+                    <form id="editBannerForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" id="editBannerId" name="banner_id">
+                        <div class="form-group">
+                            <label for="editTitle">Title:</label>
+                            <input type="text" class="form-control" id="editTitle" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="editImage">Image:</label>
+                            <input type="file" class="form-control-file" id="editImage" name="image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to fetch and list banners
+    function listBanners() {
+        $.ajax({
+            url: "{% url 'list_banners' %}",
+            type: 'GET',
+            success: function (data) {
+                $('#bannerList').html(data);
+            }
+        });
+    }
+
+    // Function to add a new banner
+    $('#addBannerForm').submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: "{% url 'add_banner' %}",
+            type: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function () {
+                $('#addBannerModal').modal('hide');
+                listBanners();
+            }
+        });
+    });
+
+    // Function to populate edit banner modal and handle edit
+    function editBanner(id, title) {
+        $('#editBannerId').val(id);
+        $('#editTitle').val(title);
+        $('#editBannerModal').modal('show');
+    }
+
+    $('#editBannerForm').submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        var id = $('#editBannerId').val();
+        $.ajax({
+            <!-- url: # + id + "/", -->
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+                $('#editBannerModal').modal('hide');
+                listBanners();
+            }
+        });
+    });
+
+    // Function to delete a banner
+    function deleteBanner(id) {
+        if (confirm('Are you sure you want to delete this banner?')) {
+            $.ajax({
+                url: "#" + id + "/",
+                type: 'POST',
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function () {
+                    listBanners();
+                }
+            });
+        }
+    }
+
+    // Load banners when the page is ready
+    $(document).ready(function () {
+        listBanners();
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

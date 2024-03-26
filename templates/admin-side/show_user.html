@@ -1,0 +1,63 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+{% load static %}
+<p>dd</p>
+<p>dd</p>
+<div class="container">
+    <div class="my-5 p-3 bg-white border rounded">
+        <h2 class="fw-bold mb-4">Customers</h2>
+
+        <!-- Search bar and button -->
+       
+
+        <div class="table-responsive" >
+            <table class="table table-bordered table-hover" id="example">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Blocked</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_active %}
+                                    <a href="{% url 'customeraction' user.id %}" class="btn btn-danger">Block</a>
+                                {% else %}
+                                    <a href="{% url 'customeraction' user.id %}" class="btn btn-success">Unblock</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.js"></script>
+
+<script>
+    new DataTable('#example', {
+    select: true
+});</script>
+{% endblock %}

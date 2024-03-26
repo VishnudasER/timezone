@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserLogin</title>
+    <link rel="stylesheet" href="{% static 'css/verify_email.css' %}" />
+    <script src="https://kit.fontawesome.com/65b842e152.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="form">
+            <br>
+            <br>
+            <h5 style="color: rgb(114, 255, 112)">Verify Email</h5>
+            <br>
+
+            <label for="" class="text-center" style="color: rgb(4, 94, 3);font-size: smaller;">l</label>
+            <br>
+
+            <form class="login-form" method="post" action="{% url 'forgot_password_action' %}">
+                {% csrf_token %}
+                <input id="email" type="email" placeholder="Email" name="email" oninput="validateEmail()" required/>
+                <p id="email-error" class="error-message" style="color: red; margin-bottom: 10px;font-size: small;"></p>
+                
+                <button id="create-button" type="submit" >Verify</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateEmail() {
+            var emailInput = document.getElementById('email'); 
+            var emailError = document.getElementById('email-error');
+            var emailValue = emailInput.value;
+
+            // Check for spaces
+            if (/\s/.test(emailValue)) {
+                emailError.textContent = 'Email cannot contain spaces';
+                emailInput.setCustomValidity('');
+            } else {
+                emailError.textContent = '';
+                // Common email validation
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailValue)) {
+                    emailError.textContent = 'Invalid email format';
+                    emailInput.setCustomValidity('');
+                } else {
+                    emailError.textContent = '';
+                    emailInput.setCustomValidity('');
+                }
+            }
+
+            // Enable or disable the submit button based on email validation
+            updateCreateButtonState();
+        }
+
+        function updateCreateButtonState() {
+            var emailError = document.getElementById('email-error').textContent;
+
+            // Disable the button if there are any errors
+            document.getElementById('create-button').disabled = !!emailError;
+        }
+
+        function validateForm() {
+            validateEmail();
+
+            // Additional form validation logic can be added here
+
+            // Return true if the form is valid, false otherwise
+            return !document.getElementById('create-button').disabled;
+        }
+    </script>
+</body>
+
+</html>

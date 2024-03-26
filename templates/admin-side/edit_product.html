@@ -1,0 +1,138 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+
+    <div class="container">
+        <div class="row p-2 d-flex justify-content-center">
+            <div class="col-md-6">
+                <form method="post" action="{% url 'edit_product_action' %}" class="border border-dark rounded" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" value="{{product.id}}" name="id">
+                    <h2 class="text-center py-2">Add Product</h2>
+                    <table class="table table-borderless ">
+                        <tr>
+                            <th>Product Name</th>
+                            <td><input type="text" name="name" class="form-control" required value="{{ product.title }}"></td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td><textarea name="description" class="form-control" required>{{ product.description }}</textarea></td>
+                        </tr>
+                        
+                        <tr>
+                            <th>Category</th>
+                            <td>
+                                <select name="category" class="form-control">
+                                    <option value="{{ product.category_id }}">{{ product.category }}</option>
+                                {% for cat in category %}
+                                {% if cat.active %}
+                                <option value="{{ cat.id }}">{{ cat.title }}</option>
+                                {% endif %}
+                                {% endfor %}
+                                </select>
+                            </td>   
+                        </tr>
+                        <tr>
+                            <th>Brand</th>
+                            <td>
+                                <select name="brand" class="form-control">
+                                {% for brd in brand %}
+                                        {% if brd.active %} 
+                                        <option value="{{ brd.id }}">{{ brd.title }}</option>
+                                        {% endif %}
+                                {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Stock</th>
+                            <td><input type="tel" name="stock" class="form-control" required value="{{ product.stock }}"></td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td><input type="tel" name="price1" class="form-control" required value="{{ product.price }}"></td>
+                        </tr>
+                        <tr>
+                            <th>old Price</th>
+                            <td><input type="tel" name="price2" class="form-control" required value="{{ product.old_price }}"></td>
+                        </tr>
+                       
+                    </tr>
+                    <tr>
+                        <th>Image 1</th>
+                        <td>
+                            <input type="file" name="img1" class="form-control" id="img1Input">
+                            {% if product.image1 %}
+                            <img src="{{ product.image1.url }}" alt="{{ product.title }} Image" id="img1Preview" style="width: auto; height: 50px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Image 2</th>
+                        <td>
+                            <input type="file" name="img2" class="form-control" id="img2Input">
+                            {% if product.image2 %}
+                            <img src="{{ product.image2.url }}" alt="{{ product.title }} Image" id="img2Preview" style="width: auto; height: 50px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Image 3</th>
+                        <td>
+                            <input type="file" name="img3" class="form-control" id="img3Input">
+                            {% if product.image3 %}
+                            <img src="{{ product.image3.url }}" alt="{{ product.title }} Image" id="img3Preview" style="width: auto; height: 50px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Image 4</th>
+                        <td>
+                            <input type="file" name="img4" class="form-control" id="img4Input">
+                            {% if product.image4 %}
+                            <img src="{{ product.image4.url }}" alt="{{ product.title }} Image" id="img4Preview" style="width: auto; height: 50px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                <div class="d-flex justify-content-end p-3">
+                    <input type="submit" class="btn btn-success px-5 py-2">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to show image previews when new images are selected
+    function addImagePreview(inputId, previewId) {
+        var imgInput = document.getElementById(inputId);
+        var imgPreview = document.getElementById(previewId);
+        
+        imgInput.addEventListener("change", function () {
+            if (imgInput.files && imgInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    imgPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            }
+        });
+    }
+
+    // Call the function for each image input and preview
+    addImagePreview("img1Input", "img1Preview");
+    addImagePreview("img2Input", "img2Preview");
+    addImagePreview("img3Input", "img3Preview");
+    addImagePreview("img4Input", "img4Preview");
+</script>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

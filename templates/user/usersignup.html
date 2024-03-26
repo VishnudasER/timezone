@@ -1,0 +1,173 @@
+{% extends 'user/base.html' %}
+{% block content %}
+{% load static %}
+<!doctype html>
+<html lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Watch shop | eCommerce</title>
+    
+</head>
+<body>
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="container d-flex justify-content-center">
+        <div class="alert alert-danger alert-dismissible fade show text-center w-50" role="alert">
+            <strong>Error! </strong>{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    {% endfor %}
+    {%endif%}
+
+
+      <section class="vh-100 bg-image"
+  style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-5">Create an account</h2>
+
+              <form id="signup-form" action="{% url 'signup_perform' %}" method="post">
+                {% csrf_token %}
+              
+                <div class="form-outline mb-4">
+                  <input type="text" id="username" class="form-control form-control-lg" name="username"  required>
+                  <label class="form-label" for="username">Your Name</label>
+                  <span id="username_error" style="color: red;"></span>
+                </div>
+              
+                <div class="form-outline mb-4">
+                  <input type="email" id="email" class="form-control form-control-lg" name="email"  required>
+                  <label class="form-label" for="email">Your Email</label>
+                  <span id="email_error" style="color: red;"></span>
+                </div>
+              
+                <div class="form-outline mb-4">
+                  <input type="password" id="password_1" class="form-control form-control-lg" name="password_1"  required>
+                  <label class="form-label" for="password_1">Password</label>
+                  <span id="password_1_error" style="color: red;"></span>
+                </div>
+              
+                <div class="form-outline mb-4">
+                  <input type="password" id="password_2" class="form-control form-control-lg" name="password_2"  required>
+                  <label class="form-label" for="password_2">Repeat your password</label>
+                  <span id="password_2_error" style="color: red;"></span>
+                </div>
+              
+                <div class="d-flex justify-content-center">
+                  <a href=""></a>
+                  <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                </div>
+              
+                <p class="text-center text-muted mt-5 mb-0">Already have an account? <a href="{% url 'login_perform' %}" class="fw-bold text-body"><u>Login here</u></a></p>
+              </form>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/myscript.js' %}"></script>
+<script src="{% static 'js/all.min.js' %}"></script>
+
+<script>
+  var noSpacesRegex = /^\S*$/;
+  var passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}/;
+
+  // Mock function for checking if username already exists
+  function checkUsernameExists(username) {
+      // You should replace this with actual server or database check
+      var existingUsernames = ['existingUser1', 'existingUser2', 'existingUser3'];
+      return existingUsernames.includes(username);
+  }
+
+  function displayError(inputId, errorMessage) {
+      var errorElement = document.getElementById(inputId + '_error');
+      errorElement.textContent = errorMessage;
+  }
+
+  function clearError(inputId) {
+      var errorElement = document.getElementById(inputId + '_error');
+      errorElement.textContent = '';
+  }
+
+  document.getElementById('username').addEventListener('blur', function () {
+      var username = this.value;
+      if (username.trim() === '' || /\d/.test(username) || /^ | $/.test(username)) {
+          displayError('username', 'Invalid name.');
+      } else if (checkUsernameExists(username)) {
+          displayError('username', 'Username already exists.');
+      } else {
+          clearError('username');
+      }
+  });
+
+  document.getElementById('password_1').addEventListener('blur', function () {
+      var password1 = this.value;
+      if (!passwordRegex.test(password1)) {
+          displayError('password_1', 'Password must contain at least 8 characters with 1 uppercase letter and 1 number.');
+      } else {
+          clearError('password_1');
+      }
+  });
+
+  document.getElementById('password_2').addEventListener('blur', function () {
+      var password1 = document.getElementById('password_1').value;
+      var password2 = this.value;
+      if (password1 !== password2) {
+          displayError('password_2', 'Both passwords must be the same.');
+      } else {
+          clearError('password_2');
+      }
+  });
+
+  document.getElementById('signup-form').addEventListener('submit', function (event) {
+      var hasErrors = false;
+
+      if (!noSpacesRegex.test(this.username.value)) {
+          displayError('username', 'Name should not contain spaces.');
+          hasErrors = true;
+      } else if (checkUsernameExists(this.username.value)) {
+          displayError('username', 'Username already exists.');
+          hasErrors = true;
+      }
+
+      if (!passwordRegex.test(this.password_1.value)) {
+          displayError('password_1', 'Password must contain at least 8 characters with 1 uppercase letter and 1 number.');
+          hasErrors = true;
+      }
+
+      if (this.password_1.value !== this.password_2.value) {
+          displayError('password_2', 'Both passwords must be the same.');
+          hasErrors = true;
+      }
+
+      if (hasErrors) {
+          event.preventDefault();
+      }
+  });
+</script>
+</body>
+</html>
+{% endblock %}

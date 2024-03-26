@@ -1,0 +1,131 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+
+<style>
+    .my-custom-form {
+        margin-top: 117px;
+    }
+</style>
+
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" action="{% url 'add_product_action' %}" class="border border-dark rounded p-4 my-custom-form" enctype="multipart/form-data" onsubmit="return validateForm()">
+
+                {% csrf_token %}
+                <h2 class="text-center mb-4">Add Product</h2>
+                {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" name="name" class="form-control" id="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea name="description" class="form-control" id="productDescription" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select name="category" class="form-control" id="productCategory">
+                        {% for cat in category %}
+                            {% if cat.active %}
+                                <option value="{{ cat.id }}">{{ cat.title }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productBrand">Brand</label>
+                    <select name="brand" class="form-control" id="productBrand">
+                        {% for brd in brand %}
+                            {% if brd.active %}
+                                <option value="{{ brd.id }}">{{ brd.title }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productStock">Stock</label>
+                    <input type="tel" name="stock" class="form-control" id="productStock" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Price</label>
+                    <input type="tel" name="price1" class="form-control" id="productPrice" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productOldPrice">Old Price</label>
+                    <input type="tel" name="price2" class="form-control" id="productOldPrice" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productImage1">Image 1</label>
+                    <input type="file" name="img1" class="form-control-file" id="productImage1" accept="image/jpeg, image/jpg, image/png" required>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="productImage2">Image 2</label>
+                    <input type="file" name="img2" class="form-control-file" id="productImage2" accept="image/jpeg, image/jpg, image/png">
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="productImage3">Image 3</label>
+                    <input type="file" name="img3" class="form-control-file" id="productImage3" accept="image/jpeg, image/jpg, image/png">
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="productImage4">Image 4</label>
+                    <input type="file" name="img4" class="form-control-file" id="productImage4" accept="image/jpeg, image/jpg, image/png">
+                </div>
+
+                <div class="text-right mt-4">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var productName = document.getElementById('productName').value.trim();
+        var productDescription = document.getElementById('productDescription').value.trim();
+        var productStock = document.getElementById('productStock').value.trim();
+        var productPrice = document.getElementById('productPrice').value.trim();
+        var productOldPrice = document.getElementById('productOldPrice').value.trim();
+
+        // Check for space validation
+        if (productName.includes('  ') || productDescription.includes('  ') || productStock.includes('  ') || productPrice.includes('  ') || productOldPrice.includes('  ')) {
+            alert('Fields cannot contain more than one consecutive space.');
+            return false;
+        }
+
+        // Check for empty or only spaces
+        if (productName === '' || productDescription === '' || productStock === '' || productPrice === '' || productOldPrice === '') {
+            alert('Fields cannot be empty.');
+            return false;
+        }
+
+        // Check for numeric validation
+        if (isNaN(productStock) || isNaN(productPrice) || isNaN(productOldPrice)) {
+            alert('Stock, Price, and Old Price must only contain numbers.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-xr4E3yaUyau7ZKfV1Dp3FSNpxId0eGFhLWij2hjDDM2djg+PFrvtH4u1c3BBvKUaQ1KLW4oEfZn7OFi6SjWNghQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
+                    </div>
+
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+
+                    {% for cart_item in cart_items %}
+                    <div class="card rounded-3 mb-4" id="cart-item-{{ cart_item.id }}">
+                        <div class="card-body p-4">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                    <img src="{{ cart_item.product.image1.url }}" class="img-fluid rounded-3"
+                                        alt="{{ cart_item.product.title }}">
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-xl-3">
+                                    <p class="lead fw-normal mb-2">{{ cart_item.product.title }}</p>
+                                    <p><span class="text-muted">Size: </span>{{ cart_item.product.category.title }}
+                                        <span class="text-muted">Color: </span>{{ cart_item.product.brand.title }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                    <a href="{% url 'update_cart' cart_item.product.id 'decrement' %}" class="btn btn-outline-dark p-1 px-3 {% if cart_item.quantity == 1 %}disabled{% endif %}">-</a>
+                                    <input id="quantity_{{ cart_item.id }}" min="1" max="10" name="quantity"
+                                        value="{{ cart_item.quantity }}" type="number"
+                                        class="form-control form-control-sm" readonly />
+                                    <a href="{% url 'update_cart' cart_item.product.id 'increment' %}" class="btn btn-outline-dark p-1 px-3 {% if cart_item.quantity == 10 %}disabled{% endif %}">+</a>
+                                </div>
+                                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                    <h5 id="price_{{ cart_item.id }}" class="mb-0" data-unit-price="{{ cart_item.product.price }}">
+                                        ${{ cart_item.total_price|floatformat:"2" }}
+                                    </h5>
+                                </div>
+                                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                    <a href="{% url 'remove_cart_item' cart_item.id %}" class="text-danger">
+                                        <i class="fas fa-trash fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="card mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="{% url 'checkout' %}" class="btn btn-warning btn-block btn-lg">Proceed to Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  
+</body>
+
+</html>
+{% endblock %}

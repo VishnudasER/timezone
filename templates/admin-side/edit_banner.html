@@ -1,0 +1,18 @@
+<!-- edit_banner.html -->
+
+<form id="editBannerForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" id="editBannerId" name="banner_id">
+    <div class="form-group">
+        <label for="editTitle">Title:</label>
+        <input type="text" class="form-control" id="editTitle" name="title" value="{{ form.instance.title }}">
+    </div>
+    <div class="form-group">
+        <label for="editImage">Image:</label>
+        <input type="file" class="form-control-file" id="editImage" name="image">
+    </div>
+    {% if form.instance.image %}
+    <img src="{{ form.instance.image.url }}" alt="Banner Image" class="img-fluid">
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

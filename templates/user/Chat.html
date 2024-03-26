@@ -1,0 +1,636 @@
+<!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
+<link href="/static/chat_style/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>-->
+<script src="/static/chat_style/bootstrap.min.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+<script src="/static/chat_style/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.clearfix:after {
+			display: block;
+			clear: both;
+			content: "";
+		}
+
+		.clearfix:after {
+			visibility: hidden;
+			font-size: 0;
+			content: " ";
+			height: 0
+		}
+	</style>
+	<title>Chat</title>
+	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+	<link rel="stylesheet" href="/static/chatstyle/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">-->
+	<link rel="stylesheet" href="/static/chatstyle/all.css"
+		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+	<script src="/static/chatstyle/jquery.min.js"></script>
+	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">-->
+	<link rel="stylesheet" type="text/css" href="/static/chatstyle/jquery.mCustomScrollbar.min.css">
+	<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>-->
+	<script type="text/javascript" src="/static/chatstyle/jquery.mCustomScrollbar.min.js"></script>
+</head>
+<!--Coded With Love By Mutiullah Samim-->
+
+<body>
+
+	<div class="container-fluid h-100">
+		<div class="row justify-content-center h-100">
+			<!--				<div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">-->
+			<!--					contacts_card<div class="card-header">-->
+			<!--						<div class="input-group">-->
+			<!--							<a href="/student" style="color: white">Go to Home</a>-->
+			<!--							&lt;!&ndash;<input type="text" placeholder="Search..." name="" class="form-control search">&ndash;&gt;-->
+			<!--							&lt;!&ndash;<div class="input-group-prepend">&ndash;&gt;-->
+			<!--								&lt;!&ndash;<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>&ndash;&gt;-->
+			<!--							&lt;!&ndash;</div>&ndash;&gt;-->
+			<!--						</div>-->
+			<!--					</div>-->
+			<!--                    <div id="tb1">-->
+			<!--                        <input type="hidden" name="d" id="d" value="{{ toid }}" />-->
+			<!--           <input type="hidden" name="textfield2" id="rece" />-->
+
+			<!--                    </div>-->
+			<!--					&lt;!&ndash;<div class="card-body contacts_body">&ndash;&gt;-->
+			<!--						&lt;!&ndash;<ui class="contacts">&ndash;&gt;-->
+			<!--						&lt;!&ndash;<li class="active">&ndash;&gt;-->
+			<!--							&lt;!&ndash;<div class="d-flex bd-highlight">&ndash;&gt;-->
+			<!--								<div class="img_cont">-->
+			<!--									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">-->
+			<!--									<span class="online_icon"></span>-->
+			<!--								</div>-->
+			<!--								&lt;!&ndash;<div class="user_info" id="tb1">&ndash;&gt;-->
+			<!--									&lt;!&ndash;&lt;!&ndash;<span>Khalid</span>&ndash;&gt;&ndash;&gt;-->
+			<!--									&lt;!&ndash;&lt;!&ndash;<p>Kalid is online</p>&ndash;&gt;&ndash;&gt;-->
+			<!--                                   &lt;!&ndash;&lt;!&ndash;id="tb1" name="tb1"&ndash;&gt;&ndash;&gt;-->
+			<!--								&lt;!&ndash;</div>&ndash;&gt;-->
+			<!--							&lt;!&ndash;</div>&ndash;&gt;-->
+			<!--						&lt;!&ndash;</li>&ndash;&gt;-->
+			<!--                        &lt;!&ndash;</ui>&ndash;&gt;-->
+			<!--					&lt;!&ndash;</div>&ndash;&gt;-->
+			<!--					<div class="card-footer"></div>-->
+			<!--				</div></div>-->
+
+			<div class="col-md-8 col-xl-6 chat">
+				<a href="/student" style="color: white">Go to Home</a>
+
+				<div class="card">
+					<div class="card-header msg_head">
+
+						<div class="d-flex bd-highlight">
+
+							<div class="img_cont" id="iiim" align="right" onclick="test()">
+								<div>
+
+									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+										class="rounded-circle user_img">
+
+
+									<!--										<div class="chat-about"><h6 class="mb-0">Eliza</h6><small>I love to listen and help. 😍</small></div>-->
+
+
+								</div>
+								<!--									<div class="chat-about"><h6 class="mb-0">Eliza</h6><small>I love to listen and help. 😍</small></div>-->
+								<span class="online_icon"></span></p>
+							</div>
+							<div class="user_info" id="nnnm">
+								<input type="hidden" name="d" id="d" value="{{ toid }}" />
+
+								<p align="left">
+								<div>
+									<h6>Eliza</h6>
+									<small>I love to listen and help. 😍</small>
+								</div> <span></span></p>
+								<!--<p>1767 Messages</p>-->
+							</div>
+						</div>
+
+						<!--<div class="video_cam">-->
+						<!--<span><i class="fas fa-video"></i></span>-->
+						<!--<span><i class="fas fa-phone"></i></span>-->
+						<!--</div>-->
+					</div>
+					<span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+					<!--<div class="action_menu">-->
+					<!--<ul>-->
+					<!--<li><i class="fas fa-user-circle"></i> View profile</li>-->
+					<!--<li><i class="fas fa-users"></i> Add to close friends</li>-->
+					<!--<li><i class="fas fa-plus"></i> Add to group</li>-->
+					<!--<li><i class="fas fa-ban"></i> Block</li>-->
+					<!--</ul>-->
+					<!--</div>-->
+
+					<div class="card-body msg_card_body">
+
+						<div id="send1">
+
+						</div>
+						<!--<div class="d-flex justify-content-start mb-4">-->
+						<!--<div class="img_cont_msg">-->
+						<!--<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">-->
+						<!--</div>-->
+						<!--<div class="msg_cotainer">-->
+						<!--Hi, how are you samim?-->
+						<!--<span class="msg_time">8:40 AM, Today</span>-->
+						<!--</div>-->
+						<!--</div>-->
+						<!--<div class="d-flex justify-content-end mb-4">-->
+						<!--<div class="msg_cotainer_send">-->
+						<!--Hi Khalid i am good tnx how about you?-->
+						<!--<span class="msg_time_send">8:55 AM, Today</span>-->
+						<!--</div>-->
+						<!--<div class="img_cont_msg">-->
+						<!--<img src="data:image/jpeg;base64,
+								<!--</div>-->
+						<!--</div>-->
+
+					</div>
+					<div class="card-footer">
+
+						<div class="input-group">
+							<div class="input-group-append">
+								<span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+							</div>
+							<textarea name="" id="textfield" class="form-control type_msg"
+								placeholder="Type your message..."></textarea>
+							<div class="input-group-append">
+								<!--<span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>-->
+								<input type="submit" class="input-group-text send_btn" value="send" id="button">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+<style>
+	body,
+	html {
+		height: 100%;
+		margin: 0;
+		background: #7F7FD5;
+		background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+		background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+	}
+
+	.chat {
+		margin-top: auto;
+		margin-bottom: auto;
+	}
+
+	.card {
+		height: 500px;
+		border-radius: 15px !important;
+		background-color: rgba(0, 0, 0, 0.4) !important;
+	}
+
+	.contacts_body {
+		padding: 0.75rem 0 !important;
+		overflow-y: auto;
+		white-space: nowrap;
+	}
+
+	.msg_card_body {
+		overflow-y: auto;
+	}
+
+	.card-header {
+		border-radius: 15px 15px 0 0 !important;
+		border-bottom: 0 !important;
+	}
+
+	.card-footer {
+		border-radius: 0 0 15px 15px !important;
+		border-top: 0 !important;
+	}
+
+	.container {
+		align-content: center;
+	}
+
+	.search {
+		border-radius: 15px 0 0 15px !important;
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 0 !important;
+		color: white !important;
+	}
+
+	.search:focus {
+		box-shadow: none !important;
+		outline: 0px !important;
+	}
+
+	.type_msg {
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 0 !important;
+		color: white !important;
+		height: 60px !important;
+		overflow-y: auto;
+	}
+
+	.type_msg:focus {
+		box-shadow: none !important;
+		outline: 0px !important;
+	}
+
+	.attach_btn {
+		border-radius: 15px 0 0 15px !important;
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 0 !important;
+		color: white !important;
+		cursor: pointer;
+	}
+
+	.send_btn {
+		border-radius: 0 15px 15px 0 !important;
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 0 !important;
+		color: white !important;
+		cursor: pointer;
+	}
+
+	.search_btn {
+		border-radius: 0 15px 15px 0 !important;
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 0 !important;
+		color: white !important;
+		cursor: pointer;
+	}
+
+	.contacts {
+		list-style: none;
+		padding: 0;
+	}
+
+	.contacts li {
+		width: 100% !important;
+		padding: 5px 10px;
+		margin-bottom: 15px !important;
+	}
+
+	.active {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	.user_img {
+		height: 70px;
+		width: 70px;
+		border: 1.5px solid #f5f6fa;
+
+	}
+
+	.user_img_msg {
+		height: 40px;
+		width: 40px;
+		border: 1.5px solid #f5f6fa;
+
+	}
+
+	.img_cont {
+		position: relative;
+		height: 70px;
+		width: 70px;
+	}
+
+	.img_cont_msg {
+		height: 40px;
+		width: 40px;
+	}
+
+	.online_icon {
+		position: absolute;
+		height: 15px;
+		width: 15px;
+		background-color: #4cd137;
+		border-radius: 50%;
+		bottom: 0.2em;
+		right: 0.4em;
+		border: 1.5px solid white;
+	}
+
+	.offline {
+		background-color: #c23616 !important;
+	}
+
+	.user_info {
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 15px;
+	}
+
+	.user_info span {
+		font-size: 20px;
+		color: white;
+	}
+
+	.user_info p {
+		font-size: 10px;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.video_cam {
+		margin-left: 50px;
+		margin-top: 5px;
+	}
+
+	.video_cam span {
+		color: white;
+		font-size: 20px;
+		cursor: pointer;
+		margin-right: 20px;
+	}
+
+	.msg_cotainer {
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 10px;
+		border-radius: 25px;
+		background-color: #82ccdd;
+		padding: 10px;
+		position: relative;
+	}
+
+	.msg_cotainer_send {
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-right: 10px;
+		border-radius: 25px;
+		background-color: #78e08f;
+		padding: 10px;
+		position: relative;
+	}
+
+	.msg_time {
+		position: absolute;
+		left: 0;
+		bottom: -15px;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 10px;
+	}
+
+	.msg_time_send {
+		position: absolute;
+		right: 0;
+		bottom: -15px;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 10px;
+	}
+
+	.msg_head {
+		position: relative;
+	}
+
+	#action_menu_btn {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		color: white;
+		cursor: pointer;
+		font-size: 20px;
+	}
+
+	.action_menu {
+		z-index: 1;
+		position: absolute;
+		padding: 15px 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		border-radius: 15px;
+		top: 30px;
+		right: 15px;
+		display: none;
+	}
+
+	.action_menu ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.action_menu ul li {
+		width: 100%;
+		padding: 10px 15px;
+		margin-bottom: 5px;
+	}
+
+	.action_menu ul li i {
+		padding-right: 10px;
+
+	}
+
+	.action_menu ul li:hover {
+		cursor: pointer;
+		background-color: rgba(0, 0, 0, 0.2);
+	}
+
+	@media(max-width: 576px) {
+		.contacts_card {
+			margin-bottom: 15px !important;
+		}
+	}
+</style>
+<script>
+	$(document).ready(function () {
+		//    	    alert("hoi");
+		//$('#action_menu_btn').click(function(){
+		//	$('.action_menu').toggle();
+		//	$('.iim').click;
+		//});
+		repeatEverySecond();
+		$.ajax({
+{#            url: "/coinup/chat_view/{{ toid }}",#}
+            url: "/iapp/chat_view/",
+			type: "GET",
+			data: {
+
+
+		},
+			contentType: "application/json;charset=utf-8",
+			dataType: "json",
+			success: function (dat) {
+
+
+
+
+				var data = dat["data"];
+				var name = dat["name"];
+				var photo = dat["photo"];
+				var user_lid = dat["toid"];
+				$("#iiim").text("")
+				$("#nnnm").text("")
+				$("#iiim").append("<img src='" + photo + "' class='rounded-circle user_img'>")
+				$("#nnnm").append("<span>Chat with " + name + "</span>")
+
+				//////////////////
+
+				$("#send1").text("");
+				var len = data.length;
+				for (var i = 0; i < len; i++) {
+					var rid = data[i]['id'];
+					var type = data[i]['from']
+					var mesg = data[i]['message'];
+					var sendid = data[i]['date'];
+
+					if (type != user_lid) {
+						//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='right'><div  class='container darker'><div>" + mesg + "</div></td></tr></table></div>")
+
+						$("#send1").append("<div class='d-flex justify-content-end mb-4'><div class='msg_cotainer_send'>" + mesg + "</div></div></div>")
+					}
+					else {
+
+						//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='left'><div><div class='container darker'>" + mesg + "</div></td></tr></table></div>")
+
+						$("#send1").append("<div class='d-flex justify-content-start mb-4'><div class=img_cont_msg'></div><div class='msg_cotainer'>" + mesg + "</div></div>")
+
+
+					}
+
+				}
+
+
+				/////////////////////////////////
+
+			},
+			error: function (ts) {
+				//{#                alert(ts);#}
+			}
+        });
+
+	});
+</script>
+
+<script src="/static/jquery.js"></script>
+<script>
+
+	function test() {
+
+		$("#button").show();
+		$("#textfield").show();
+
+
+		$.ajax({
+{#            url: "/coinup/chat_view/{{ toid }}",#}
+            url: "/iapp/chat_view/",
+			type: "GET",
+			data: {
+
+
+		},
+			contentType: "application/json;charset=utf-8",
+			dataType: "json",
+			success: function (dat) {
+
+
+
+				var data = dat["data"];
+				var name = dat["name"]; var photo = dat["photo"];
+				var user_lid = dat["toid"];
+				$("#iiim").text("")
+				$("#nnnm").text("")
+				$("#iiim").append("<img src=" + photo + " class='rounded-circle user_img'>")
+				$("#nnnm").append("<span>Chat with " + name + "</span>")
+
+				//////////////////
+
+				$("#send1").text("");
+				var len = data.length;
+				for (var i = 0; i < len; i++) {
+					var rid = data[i]['id'];
+					var type = data[i]['from']
+					var mesg = data[i]['message'];
+					var sendid = data[i]['date'];
+
+					if (type != user_lid) {
+						//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='right'><div  class='container darker'><div>" + mesg + "</div></td></tr></table></div>")
+						$("#send1").append("<div class='d-flex justify-content-end mb-4'><div class='msg_cotainer_send'>" + mesg + "</div></div></div>")
+
+					}
+					else {
+
+						$("#send1").append("<div class='d-flex justify-content-start mb-4'><div class=img_cont_msg'></div><div class='msg_cotainer'>" + mesg + "</div></div>")
+						//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='left'><div><div class='container darker'>" + mesg + "</div></td></tr></table></div>")
+
+
+
+					}
+
+				}
+
+
+				/////////////////////////////////
+
+			},
+			error: function (ts) {
+				//{#                alert(ts);#}
+			}
+        });
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+	$("#button").click(function () {
+
+		var msg = $("#textfield").val();
+
+
+
+
+
+		$.ajax({
+{#            url: "/coinup/chat_send/"+msg + "/" + {{ toid }},#}
+		url: "/iapp/chat_send/" + msg,
+		type: "GET",
+		data: {
+
+
+	},
+		contentType: "application/json;charset=utf-8",
+		dataType: "json",
+		success: function (dat) {
+
+
+			$("#textfield").val("");
+
+		},
+		error: function (ts) {
+		}
+			
+        });
+
+
+		});
+
+
+
+
+</script>
+<script>
+
+
+	function repeatEverySecond() {
+
+		//{#    alert('hiii');#}
+		intervalID = setInterval(test, 1000);
+	}
+
+</script>

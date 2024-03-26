@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+</head>
+<body>
+    <div>
+        <h1>Invoice</h1>
+    </div>
+    <div>
+        <h2>Order Details:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.title }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price|floatformat:2 }} * {{ item.quantity }} = ${{ item.total_price|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>User Address:</h2>
+        <ul>
+            {% for address in user_addresses %}
+            <li>{{ address.first_name }}, {{ address.last_name }}{{ address.street_address }}, {{ address.city }}, {{ address.country }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <p><strong>Total Price:</strong> ${{ order.total_paid }}</p>
+        <p><strong>Order Date:</strong> {{ order.created }}</p>
+        <p><strong>Invoice Date:</strong> {{ current_date }}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends 'user/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-10 my-7">
+    <div class="card text-center">
+        <div class="card-body">
+            <p class="click-me">Click Me!</p>
+        <hr>
+            {{ paypal_payment.render }}
+        </div>
+    </div>
+</div>
+{% endblock %}

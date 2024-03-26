@@ -1,0 +1,129 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+<p>dgfdg</p>
+<p>bgjhghj</p>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+  Add Coupon
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add Coupon</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'addcoupon' %}" method="post" onsubmit="return validateCouponForm()">
+          {%csrf_token%}
+          <div class="mb-3">
+            <label for="coupon-code" class="form-label">Coupon Code</label>
+            <input type="text" class="form-control" id="coupon-code" name="coupon-code" required>
+            <span id="couponCodeError" class="text-danger"></span>
+          </div>
+
+          <div class="mb-3">
+            <label for="expiry_date" class="form-label">Expiry Date</label>
+            <input type="date" class="form-control" id="expiry_date" name="expiry_date" required>
+            <span id="expiryDateError" class="text-danger"></span>
+          </div>
+
+          <div class="mb-3">
+            <label for="discount_price" class="form-label">Discount Price</label>
+            <input type="text" class="form-control" id="discount_price" name="discount_price" required>
+            <span id="discountPriceError" class="text-danger"></span>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <input type="submit" value="Add Coupon" class="btn btn-primary">
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="input-group mb-3">
+  <table class="table text-center">
+    <tr>
+      <th>Sl No</th>
+      <th>Coupon Name</th>
+      <th>Expiry Date</th>
+      <th>Discount Price</th>
+      <th>Action</th>
+    </tr>
+    {% for cou in coupon %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ cou.coupon_code }}</td>
+      <td>{{ cou.is_expired }}</td>
+      <td>{{ cou.discount_price }}</td>
+      <td><a href="{% url 'edit_coupon' cou.id %}" type="button" class="btn btn-primary">Edit</a>
+        <a href="{% url 'delete_coupon' cou.id %}" onclick="return confirm('Are you sure you want to delete this coupon?')" class="btn btn-danger">Delete</a>
+        <!-- <a href="{% url 'delete_coupon' cou.id %}" type="button" class="btn btn-danger">Delete</a> -->
+
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<script>
+  function validateCouponForm() {
+    var couponCodeInput = document.getElementById('coupon-code');
+    var expiryDateInput = document.getElementById('expiry_date');
+    var discountPriceInput = document.getElementById('discount_price');
+
+    var couponCodeError = document.getElementById('couponCodeError');
+    var expiryDateError = document.getElementById('expiryDateError');
+    var discountPriceError = document.getElementById('discountPriceError');
+
+    // Coupon Code validation
+    if (couponCodeInput.value.trim() === '') {
+        couponCodeError.textContent = 'Coupon code cannot be empty.';
+        return false;
+    } else {
+        couponCodeError.textContent = '';
+    }
+
+    // Expiry Date validation
+    if (expiryDateInput.value.trim() === '') {
+        expiryDateError.textContent = 'Expiry date cannot be empty.';
+        return false;
+    } else {
+        expiryDateError.textContent = '';
+
+        // Check if expiry date is a valid date in YYYY-MM-DD format
+        var isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(expiryDateInput.value.trim());
+        if (!isValidDate) {
+            expiryDateError.textContent = 'Enter a valid date in YYYY-MM-DD format.';
+            return false;
+        } else {
+            var today = new Date().toISOString().split('T')[0];
+            if (expiryDateInput.value.trim() < today) {
+                expiryDateError.textContent = 'Expiry date cannot be a past date.';
+                return false;
+            } else {
+                expiryDateError.textContent = '';
+            }
+        }
+    }
+
+    // Discount Price validation
+    if (discountPriceInput.value.trim() === '') {
+        discountPriceError.textContent = 'Discount price cannot be empty.';
+        return false;
+    } else {
+        discountPriceError.textContent = '';
+    }
+
+    return true;
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+<p>dhfuhd</p>
+<p>dfdff</p>
+<div class="container">
+  <h6><b>Edit your Coupon</b></h6>
+
+  <form action="{% url 'edit_couponaction' %}" method="post" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <input type="hidden" value="{{ coupon.id }}" name="id">
+      <div class="mb-3">
+          <label for="code" class="form-label">Coupon Code</label>
+          <input type="text" class="form-control" id="code" name="code" value="{{ coupon.coupon_code }}" required>
+          <span id="codeError" class="text-danger"></span>
+      </div>
+      
+      <div class="mb-3">
+          <label for="expiry_date" class="form-label">Expiry Date</label>
+          <input type="date" class="form-control" id="expiry_date" name="expiry_date" value="{% if coupon.expiry_date %}{{ coupon.expiry_date|date:'Y-m-d' }}{% endif %}" required>
+          <span id="expiryDateError" class="text-danger"></span>
+      </div>
+    
+      <div class="mb-3">
+          <label for="discount_price" class="form-label">Discount Price</label>
+          <input type="text" class="form-control" id="discount_price" name="discount_price" value="{{ coupon.discount_price }}" required>
+          <span id="discountPriceError" class="text-danger"></span>
+      </div>
+      
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" value="Save" class="btn btn-primary">
+      </div>
+  </form>
+</div>
+
+<script>
+  function validateForm() {
+      var codeInput = document.getElementById('code');
+      var expiryDateInput = document.getElementById('expiry_date');
+      var discountPriceInput = document.getElementById('discount_price');
+  
+      var codeError = document.getElementById('codeError');
+      var expiryDateError = document.getElementById('expiryDateError');
+      var discountPriceError = document.getElementById('discountPriceError');
+  
+      // Code validation
+      if (codeInput.value.trim() === '') {
+          codeError.textContent = 'Coupon code cannot be empty.';
+          return false;
+      } else {
+          codeError.textContent = '';
+      }
+  
+      // Expiry Date validation
+      var expiryDateValue = expiryDateInput.value.trim();
+      if (expiryDateValue === '') {
+          expiryDateError.textContent = 'Expiry date cannot be empty.';
+          return false;
+      } else {
+          var validDate = isValidDate(expiryDateValue);
+          if (!validDate) {
+              expiryDateError.textContent = 'Enter a valid date in YYYY-MM-DD format.';
+              return false;
+          } else {
+              expiryDateError.textContent = '';
+  
+              // Check if expiry date is not a past date
+              var today = new Date().toISOString().split('T')[0];
+              if (expiryDateValue < today) {
+                  expiryDateError.textContent = 'Expiry date cannot be a past date.';
+                  return false;
+              } else {
+                  expiryDateError.textContent = '';
+              }
+          }
+      }
+  
+      // Discount Price validation
+      if (discountPriceInput.value.trim() === '') {
+          discountPriceError.textContent = 'Discount price cannot be empty.';
+          return false;
+      } else {
+          discountPriceError.textContent = '';
+      }
+  
+      return true;
+  }
+  
+  function isValidDate(dateString) {
+      var regEx = /^\d{4}-\d{2}-\d{2}$/;
+      return dateString.match(regEx) !== null;
+  }
+  
+</script>
+{% endblock %}

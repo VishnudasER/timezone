@@ -1,0 +1,163 @@
+{% extends 'user/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Address</title>
+    <!-- Include your CSS and other necessary assets here -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    {% block content %}
+    <div class="container mt-5">
+        <h2>Edit Address</h2>
+        <form id="editAddressForm" method="post" action="{% url 'update_address' address_id=address.id %}">
+            {% csrf_token %}
+            <input type="hidden" id="editAddressId" name="editAddressId" value="{{ address.id }}">
+
+            <div class="mb-3">
+                <label for="editFirstName" class="form-label">First Name:</label>
+                <input type="text" id="editFirstName" name="editFirstName" value="{{ address.first_name }}" required
+                    class="form-control">
+                <span id="editFirstName-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editLastName" class="form-label">Last Name:</label>
+                <input type="text" id="editLastName" name="editLastName" value="{{ address.last_name }}" required
+                    class="form-control">
+                <span id="editLastName-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editAddress1" class="form-label">Address Line 1:</label>
+                <input type="text" id="editAddress1" name="editAddress1" value="{{ address.address1 }}" required
+                    class="form-control">
+                <span id="editAddress1-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editAddress" class="form-label">Address:</label>
+                <input type="text" id="editAddress" name="editAddress" value="{{ address.address }}" required
+                    class="form-control">
+                <span id="editAddress-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editCity" class="form-label">City:</label>
+                <input type="text" id="editCity" name="editCity" value="{{ address.city }}" required
+                    class="form-control">
+                <span id="editCity-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editZipcode" class="form-label">Pin/Zip Code:</label>
+                <input type="text" id="editZipcode" name="editZipcode" value="{{ address.zipcode }}" required
+                    class="form-control">
+                <span id="editZipcode-error" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="editPhone" class="form-label">Phone Number:</label>
+                <input type="text" id="editPhone" name="editPhone" value="{{ address.phone }}" required
+                    class="form-control">
+                <span id="editPhone-error" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+
+   
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to validate Edit Address form
+        function validateEditAddressForm() {
+            validateEditFirstName();
+            validateEditLastName();
+            validateEditAddress1();
+            validateEditAddress();
+            validateEditCity();
+            validateEditZipcode();
+            validateEditPhone();
+
+            // Check if any error messages are present
+            var errorMessages = document.querySelectorAll('.text-danger');
+            for (var i = 0; i < errorMessages.length; i++) {
+                if (errorMessages[i].textContent !== '') {
+                    return false; // Prevent form submission if there are errors
+                }
+            }
+
+            return true; // Proceed with form submission if there are no errors
+        }
+
+        // Add event listeners to input fields
+        document.getElementById('editFirstName').addEventListener('input', validateEditFirstName);
+        document.getElementById('editLastName').addEventListener('input', validateEditLastName);
+        document.getElementById('editAddress1').addEventListener('input', validateEditAddress1);
+        document.getElementById('editAddress').addEventListener('input', validateEditAddress);
+        document.getElementById('editCity').addEventListener('input', validateEditCity);
+        document.getElementById('editZipcode').addEventListener('input', validateEditZipcode);
+        document.getElementById('editPhone').addEventListener('input', validateEditPhone);
+
+        // Add event listener to form submission
+        document.getElementById('editAddressForm').addEventListener('submit', validateEditAddressForm);
+    });
+
+    // Function to validate Edit First Name
+    function validateEditFirstName() {
+        var editFirstNameInput = document.getElementById('editFirstName');
+        var editFirstName = editFirstNameInput.value;
+        var errorElement = document.getElementById('editFirstName-error');
+
+        if (!editFirstName) {
+            errorElement.textContent = 'First Name is required.';
+        } else if (/\s/.test(editFirstName)) {
+            errorElement.textContent = 'First Name cannot contain spaces.';
+        } else {
+            errorElement.textContent = '';
+        }
+    }
+
+    // Function to validate Edit Zipcode
+    function validateEditZipcode() {
+        var editZipcodeInput = document.getElementById('editZipcode');
+        var editZipcode = editZipcodeInput.value;
+        var errorElement = document.getElementById('editZipcode-error');
+
+        if (!editZipcode) {
+            errorElement.textContent = 'Pin/Zip Code is required.';
+        } else if (!/^\d{6}$/.test(editZipcode)) {
+            errorElement.textContent = 'Pin/Zip Code must be exactly 6 digits.';
+        } else {
+            errorElement.textContent = '';
+        }
+    }
+
+    // Function to validate Edit Phone
+    function validateEditPhone() {
+        var editPhoneInput = document.getElementById('editPhone');
+        var editPhone = editPhoneInput.value;
+        var errorElement = document.getElementById('editPhone-error');
+
+        if (!editPhone) {
+            errorElement.textContent = 'Phone Number is required.';
+        } else if (!/^[6-9]\d{9}$/.test(editPhone)) {
+            errorElement.textContent = 'Invalid Phone Number. Must start with 6, 7, 8, or 9 and be 10 digits.';
+        } else {
+            errorElement.textContent = '';
+        }
+    }
+    // Add similar functions for other fields if needed
+</script>
+
+
+    {% endblock%}

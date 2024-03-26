@@ -1,0 +1,132 @@
+{% extends 'user/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <!-- Include Bootstrap CSS (you need to provide the correct path) -->
+  <link rel="stylesheet" href="/path-to-bootstrap/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column; /* Set flex direction to column */
+      justify-content: space-between; /* Align items in a column */
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    header {
+      background-color: #fafafa;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+    }
+
+    footer {
+      background-color: #ffffff;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto; /* Center the container */
+      flex-grow: 1; /* Allow the box to grow and take available space */
+    }
+
+    h2 {
+      color: #007BFF;
+    }
+
+    p {
+      color: #6c757d;
+    }
+
+    .alert {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-top: 20px;
+    }
+
+    input {
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 10px;
+      width: 70%;
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #d3d7da;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 25%;
+    }
+
+    a {
+      display: block;
+      margin-top: 20px;
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Header content goes here -->
+</header>
+
+<div class="form-container">
+  <h2>Verify OTP</h2>
+  <p>Please enter the OTP sent to your email.</p>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        <strong>Error! </strong>{{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form action="{% url 'otp_perform' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="text" name="otp" class="form-control" maxlength="6" required placeholder="Enter OTP">
+      <button type="submit" class="btn btn-primary">Verify</button>
+    </div>
+  </form>
+  <a href="/resend_otp">Resend OTP</a>
+</div>
+
+<footer>
+  <!-- Footer content goes here -->
+</footer>
+
+<!-- Include Bootstrap JS and jQuery (you need to provide the correct paths) -->
+<script src="/path-to-jquery/jquery.min.js"></script>
+<script src="/path-to-bootstrap/bootstrap.min.js"></script>
+
+</body>
+</html>
+{% endblock %}

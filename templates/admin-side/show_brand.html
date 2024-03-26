@@ -1,0 +1,91 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Brand View</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .category-box {
+            padding: 20px;
+            background-color: #f4f4f4; /* Light gray background */
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #6c757d; /* Light grayish-blue background */
+            color: white;
+            width: 100px;
+        }
+
+        .btn-group {
+            margin-right: 20px; /* Adjust the margin to increase or decrease spacing */
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+
+        .btn-success {
+            background-color: #c8e6c9; /* Light green */
+            color: #155724; /* Dark green text color for contrast */
+        }
+        
+
+        .btn-danger {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="category-box">
+            <h1 class="mb-4">Brand Management</h1>
+
+            <!-- Display Brands in a Table -->
+            <table class="brand-table">
+                <thead>
+                    <tr>
+                        <th>Brand Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for brd in brand %}
+                        <tr>
+                            <td>{{ brd.title }}</td>
+                            <td class="brand-actions">
+                                <a href="{% url 'edit_brand' brd.id %}" class="btn btn-success">Edit</a>
+                                {% if brd.active %}
+                                    <a href="{% url 'brand_action' brd.id %}" class="btn btn-success">Available</a>
+                                {% else %}
+                                    <a href="{% url 'brand_action' brd.id %}" class="btn btn-danger">Not Available</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p><a href="{% url 'add_brand' %}" class="btn btn-success">Add Brand</a></p>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

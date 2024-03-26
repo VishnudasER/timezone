@@ -1,0 +1,267 @@
+{% extends 'admin-side/base.html' %}
+{% block content %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Home</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static '/img/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    img {
+        width: 100px;
+        /* Adjust the width of the image */
+        height: auto;
+        /* Maintain aspect ratio */
+    }
+</style>
+
+<body>
+    <p>kjd</p>
+    <p>d</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Customers</h5>
+                    <p class="card-text">{{ ncustomer }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">{{ norder }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">{{ nproduct }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Top Selling Brand</h5>
+                    {% if top_selling_brand %}
+                    <p class="card-text">{{ top_selling_brand.0.product__brand__title }} - {{ top_selling_brand.0.total_sales }} units</p>
+                    {% else %}
+                    <p class="card-text">No sales data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Top Selling Category</h5>
+                    {% if top_selling_category %}
+                    <p class="card-text">{{ top_selling_category.0.product__category__title }} - {{ top_selling_category.0.total_sales }} units</p>
+                    {% else %}
+                    <p class="card-text">No sales data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <select id="filterSelect">
+        <option value="yearly">Yearly</option>
+        <option value="monthly">Monthly</option>
+        <!-- Add more options as needed -->
+    </select>
+    
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <!-- <span>Category :</span> -->
+    <!-- <canvas id="myCategory" width="400" height="200"></canvas> -->
+   
+    
+    <table id="example">
+        <thead>
+            <tr>
+
+                <!-- <th>Product Image</th> -->
+                <th>Product Title</th>
+                <th>Product Category</th>
+                <th>Product Brand</th>
+                <th>Order Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in top_selling_products %}
+            <tr>
+                <!-- <td><img src="{{ product.product__image1.url }}"></td> -->
+                <td>{{ product.product__title }}</td>
+                <td>{{ product.product__category__title }}</td>
+                <td>{{ product.product__brand__title }}</td>
+                <td>{{ product.order_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table id="example">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in top_selling_categoriess %}
+            <tr>
+                <td>{{ category.product__category__title }}</td>
+                <td>{{ category.total_sales }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table id="example">
+    <h1>Top Selling Brands</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Total Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for brand in top_selling_brands %}
+            <tr>
+                <td>{{ brand.product__brand__title }}</td>
+                <td>{{ brand.total_sales }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <script src="{% static 'assets/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/libs/simplebar/dist/simplebar.js' %}"></script>
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+    <script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.js"></script>
+
+    <script>
+        new DataTable('#example', {
+            select: true
+        });</script>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function updateChart(filterType) {
+                const labels = [{% for label in top_selling_products_data.labels %}"{{ label }}", {% endfor %}];
+                const quantities = [{% for quantity in top_selling_products_data.quantities %}{{ quantity }}, {% endfor %}];
+
+                console.log(labels)
+
+                myChart.data.labels = labels;
+                myChart.data.datasets[0].data = quantities;
+                myChart.update();
+            }
+            
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Top Selling Products',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+           
+            document.getElementById('filterSelect').addEventListener('change', function(event) {
+                const filterType = event.target.value;
+                updateChart(filterType);
+            });
+            
+            updateChart('yearly'); 
+        });
+
+
+        const categorySalesData = JSON.parse('{{ category_sale | escapejs }}');
+
+        // Function to render the chart
+        function renderChart() {
+            const labels = Object.keys(categorySalesData);
+            const values = Object.values(categorySalesData);
+
+            console.log(categorySalesData, labels, values)
+
+            const ctx2 = document.getElementById('myCategory').getContext('2d');
+            const categorySalesChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Sale',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        // Call the function to render the chart
+        renderChart();
+
+    </script>
+       
+</body>
+
+</html>
+{% endblock %}

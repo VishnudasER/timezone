@@ -1,0 +1,122 @@
+{% extends 'user/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background: #eee;
+    }
+
+    .card {
+        width: 350px;
+        padding: 10px;
+        border-radius: 20px;
+        background: #336699; /* Replace with your desired color code */
+        border: none;
+        color: #fff;
+        height: 350px;
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .card h1 {
+        font-size: 48px;
+        margin-bottom: 0px;
+    }
+
+    .card span {
+        font-size: 28px;
+    }
+
+    .image {
+        position: absolute;
+        opacity: .1;
+        left: 0;
+        top: 0;
+    }
+
+    .image2 {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        opacity: .1;
+    }
+
+    .copy-button {
+        background-color: #4c7aaf;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            {% if active_coupon %}
+            {% for coupon in active_coupon %}
+            <div class="col-md-4 mb-4">
+                <div class="card text-center">
+                    <div class="image"><img src="https://i.imgur.com/DC94rZe.png" width="120"></div>
+                    <div class="image2"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
+                    <h1>{{ coupon.coupon_name }}</h1>
+    
+                    <div class="mt-4"><small>Purchase Discount :{{ coupon.discount_price }}</small></div>
+                    <div class="mt-4">
+                        <small>Code: <span id="couponCode{{ forloop.counter }}">{{ coupon.coupon_code }}</span></small>
+                        <input type="text" id="hiddenInput{{ forloop.counter }}" value="{{ coupon.code }}"
+                            style="opacity: 0; position: absolute;">
+                    </div>
+                    <button class="copy-button copy-coupon" data-coupon="{{ coupon.coupon_code }}">Copy Code</button>
+                    <div class="mt-4"><small>Expired: {{ coupon.is_expired }}</small></div>
+                </div>
+                <!-- {% if coupon.user == user_is %}
+                <div>
+                    <h6 style="color: red;">Used</h6>
+                </div>
+                {% endif %} -->
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+        $(document).ready(function () {
+          $('.copy-coupon').click(function () {
+            const couponCode = $(this).data('coupon');
+            const tempInput = $('<input>');
+            $('body').append(tempInput);
+            tempInput.val(couponCode).select();
+            document.execCommand('copy');
+            tempInput.remove();
+            alert('Coupon code copied: ' + couponCode);
+          });
+        });
+      </script>
+      <script>
+        function copyToClipboard() {
+          const referralCode = document.getElementById('referralCode').innerText;
+          const dummyInput = document.createElement('textarea');
+          dummyInput.value = referralCode;
+          document.body.appendChild(dummyInput);
+          dummyInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(dummyInput);
+          alert('Referral code copied: ' + referralCode);
+        }
+      </script>
+    
+  </body>
+</html>
+{% endblock %}

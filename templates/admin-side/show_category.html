@@ -1,0 +1,89 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Category View</title>
+</head>
+
+<body>
+    <style>
+        .category-box {
+            padding: 20px;
+            background-color: #f4f4f4; /* Light gray background */
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #6c757d; /* Light grayish-blue background */
+            color: white;
+            width: 100px;
+        }
+
+        .btn-group {
+            margin-right: 20px; /* Adjust the margin to increase or decrease spacing */
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+
+        .btn-success {
+            background-color: #c8e6c9; /* Light green */
+            color: #155724; /* Dark green text color for contrast */
+        }
+        
+
+        .btn-danger {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+    </style>
+
+    <div class="category-box">
+        <h1>Category Management</h1>
+
+        <!-- Display Categories in a Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            {% for cat in category %}
+            <tbody>
+                <!-- Categories will be displayed here dynamically -->
+                <tr>
+                    <td>{{ cat.title }}</td>
+                    <td>
+                        <a href="{% url 'edit_category' cat.id %}" class="btn btn-success">Edit</a>
+                        {% if cat.active %}
+                            <a href="{% url 'category_action' cat.id %}" class="btn btn-success"> Available</a>
+                        {% else %}
+                            <a href="{% url 'category_action' cat.id %}" class="btn btn-danger">Not Available</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        <br>
+        <p><a href="{% url 'add_category' %}" class="btn btn-success">Add Category</a></p>
+    </div>
+</body>
+</html>
+{% endblock %}

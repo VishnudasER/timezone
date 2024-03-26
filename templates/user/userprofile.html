@@ -1,0 +1,313 @@
+{% extends 'user/base.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>u-home</title>
+    <link rel="stylesheet" href="{% static '/css/user_profile.css' %}">
+</head>
+<style>
+    /* Custom styles for reducing box length */
+    .card {
+        max-width: 800px; /* Adjust this value as needed */
+    }
+
+    /* Add more custom styles for other elements as needed */
+</style
+
+<body style="font-family: Poppins, sans-serif;">
+
+    <h1 class="h3 mb-3">User Profile</h1>
+    <div class="row">
+        <div class="col-md-5 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Profile Settings</h5>
+                </div>
+                <div class="list-group list-group-flush" role="tablist">
+                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account"
+                        role="tab">
+                        Account
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab">
+                        Password
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#address1" role="tab">
+                        Manage Addresses
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#coupons" role="tab">
+                        Available Coupons
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#referral" role="tab">
+                        Refer and Earn
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-7 col-xl-8">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="account" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <h5 class="card-title mb-0">Public info</h5>
+                        </div>
+
+                            
+                        <div class="card-body">
+                            <div id="errorMessage" class="text-danger" style="display: none;">
+                                
+                               
+                                <span style="cursor: pointer; float: right;" onclick="closeErrorMessage()">X</span>
+                            </div>
+                            <div class="justify-content-center">
+                               </div>
+                            <form action="{% url 'edit_username_action' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <div class="col-md-4 text-right" style="margin-left: 360px;">
+                                                <!-- Edit icon -->
+                                                <i class="fas fa-edit" id="editIcon" style="cursor: pointer;"></i>
+                                            </div>
+                                            {% if request.user.is_authenticated %}
+                                                <label for="inputUsername">Username</label>
+                                                <input type="text" class="form-control" id="inputUsername" name="new_username"
+                                                       placeholder="New Username" value="{{ request.user.username|title }}" oninput="validateUsername()">
+                                                {% if form.new_username.errors %}
+                                                    <div class="text-danger">
+                                                        {{ form.new_username.errors.0 }}
+                                                    </div>
+                                                {% endif %}
+                                                <div id="usernamePreview"></div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputEmail">Email</label>
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
+                                                   value="{{ request.user.email|title }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+                        
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="password" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Password</h5>
+                            <label for="" class="text-center" style="color: red; font-size: smaller;"></label>
+                            <form id="changePasswordForm" action="{% url 'change_password' %}" method="post">
+                                {% csrf_token %}
+                                <!-- Current password -->
+                                <div class="form-group">
+                                    <label for="inputPasswordCurrent">Current password</label>
+                                    <input type="password" placeholder="Current Password" name="old_password" class="form-control" id="old-password" required>
+
+                                </div>
+                                <small></small>
+                
+                                <!-- New password -->
+                                <div class="form-group">
+                                    <label for="inputPasswordNew">New password</label>
+                                    <input id="new-password" type="password" placeholder="New Password" name="new_password"
+                                           required>
+                                    <p id="password-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                </div>
+                
+                                <!-- Confirm password -->
+                                <div class="form-group">
+                                    <label for="inputPasswordNew2">Confirm password</label>
+                                    <input type="password" placeholder="Confirm Password" class="form-control"
+                                           id="confirm-password" name="confirm_password" required>
+                                    <p id="confirm-password-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                </div>
+                
+                                <button id="change-password-button" type="submit" onclick="changePassword()" >Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+
+
+                <div class="tab-pane fade " id="coupons" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container">
+
+                               
+
+                                    <div class="coupon-card1">
+                                        
+                                        <h4>
+                                           
+                                        </h4>
+                                        <div class="coupon-row">
+                                            <span class="cpnCode">
+                                               
+                                            </span>
+                                            <span class="cpnBtn">Copy Code</span>
+                                        </div>
+                                        <div class="circle1"></div>
+                                        <div class="circle2"></div>
+                                    </div>
+                                    <br>
+
+                                   
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane fade" id="address1" role="tabpanel">
+                    <div class="address-container">
+                        <div class="add-address">
+                            <div>
+                                <h2>Address</h2>
+                            </div>
+                            <div class="edit-btn bg-light rounded">
+                                <a href="{% url 'add_address' %}" class="btn btn-success btn-sm">
+                                    Add <i class="bx bx-plus font-size-12"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="address-list">
+                            {% for add in address %}
+                                <li>
+                                    <p><span style="font-weight: bold;">Name: </span>{{ add.first_name }} {{ add.last_name }}</p>
+                                    <p><span style="font-weight: bold;">Address: </span>{{ add.address1 }} {{ add.address }}</p>
+                                    <p><span style="font-weight: bold;">City: </span>{{ add.city }}</p>
+                                    <p><span style="font-weight: bold;">Pin: </span>{{ add.zipcode }}</p>
+                                    <p><span style="font-weight: bold;">Phone: </span>{{ add.phone }}</p>
+                        
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                           
+                                        </div>
+                        
+                                        <div class="col-auto">
+                                            <a href="{% url 'edit_address_page' address_id=add.id %}">
+                                                <button class="btn-sm btn-primary">Edit</button>
+                                            </a>                                                                 
+                                        </div>
+                        
+                                        <div class="col-auto">
+                                            <a href="{% url 'delete_address' address_id=add.id %}">
+                                                <button class="btn-sm btn-danger" onclick="deleteAddress('{{ add.id }}')">
+                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                        
+                                    <p hidden>id: {{ add.id }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                           </li></ul></div></div></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- <script type="text/javascript"></script> -->
+
+
+
+</body>
+<script>
+
+    function changePassword() {
+      // Get values from the form
+      var oldPassword = document.getElementById("old-password").value;
+      var newPassword = document.getElementById("new-password").value;
+      var confirmPassword = document.getElementById("confirm-password").value;
+  
+      if (newPassword !== confirmPassword) {
+        document.getElementById("password-warning").innerText = "Passwords do not match.";
+        return;
+      }
+  
+      document.getElementById("password-warning").innerText = "";
+  
+  
+      $.ajax({
+        type: 'POST',
+        url: '{% url "change_password" %}',
+        data: {
+          old_password: oldPassword,
+          new_password: newPassword,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+  
+          alert("Password changed successfully!");
+          // Close the modal
+          $('#changePasswordModal').modal('hide');
+        },
+        error: function (xhr, errmsg, err) {
+  
+          alert("Error changing password. Please try again.");
+        }
+      });
+    }
+  </script>
+  
+<script>
+    // Your validation script (can be placed in a separate JS file)
+    // Example validation, you may want to enhance this according to your requirements
+    document.getElementById('changePasswordForm').addEventListener('input', function () {
+        var newPassword = document.getElementById('new-password').value;
+        var confirmPassword = document.getElementById('inputPasswordNew2').value;
+        var submitButton = document.getElementById('change-password-button');
+        var passwordError = document.getElementById('password-error');
+        var confirmError = document.getElementById('confirm-password-error');
+
+        if (newPassword.length < 8) {
+            passwordError.textContent = 'Password must be at least 8 characters long.';
+            submitButton.disabled = true;
+        } else {
+            passwordError.textContent = '';
+            submitButton.disabled = false;
+        }
+
+        if (newPassword !== confirmPassword) {
+            confirmError.textContent = 'Passwords do not match.';
+            submitButton.disabled = true;
+        } else {
+            confirmError.textContent = '';
+            submitButton.disabled = false;
+        }
+    });
+</script>
+
+</html>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "admin-side/base.html" %}
+{% block content %}
+<div class="container mt-4"> <!-- Added mt-4 for top margin -->
+    <h1>Add New Category</h1>
+
+    <form method="post" action="{% url 'add_category_action' %}" class="border border-dark rounded p-4" enctype="multipart/form-data">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% csrf_token %}
+    
+        <div class="form-group">
+            <label for="new_category">New Category</label>
+            <input type="text" id="new_category" name="new_category" class="form-control" oninput="validateForm()" required>
+            <div id="newCategoryError" class="text-danger"></div>
+        </div>
+    
+        <div class="text-right mt-3">
+            <button type="submit" id="submitBtn" class="btn btn-success" disabled>Add Category</button>
+        </div>
+    </form>
+    
+    <script>
+        function validateForm() {
+            var newCategoryInput = document.getElementById('new_category');
+            var newCategory = newCategoryInput.value.trim();
+            var errorDiv = document.getElementById('newCategoryError');
+            var submitBtn = document.getElementById('submitBtn');
+    
+            // Check for space validation
+            if (newCategory.includes('  ')) {
+                errorDiv.innerHTML = 'New Category cannot contain more than one consecutive space.';
+                submitBtn.disabled = true;
+                return;
+            }
+    
+            // Check for empty or only spaces
+            if (newCategory === '') {
+                errorDiv.innerHTML = 'New Category cannot be empty or contain only spaces.';
+                submitBtn.disabled = true;
+            } else {
+                errorDiv.innerHTML = '';
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</div> <!-- Added closing tag for container -->
+{% endblock %}

@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="product-caption">
                                         <h3 style="font-size: 18px; margin-bottom: 5px; color: #333; font-family: 'Your Desired Font';">
-                                            <a href="/product" style="text-decoration: none; color: #333;">{{ p.title }}</a>
+                                            <a href="{% url 'products' %}" style="text-decoration: none; color: #333;">{{ p.title }}</a>
                                         </h3>
                                         <h5 style="font-size: 16px; margin-bottom: 5px; color: #007BFF;">₹{{ p.price }}</h5>
                                         {% if p.old_price %}

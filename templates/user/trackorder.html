@@ -235,6 +235,16 @@
                                                      <td class="text-end text-success">+ $ {{ shipping_charge|floatformat:0 }}</td>
                                                  </tr>
                                                  <tr>
+                                                    <td>Coupon Discount :</td>
+                                                    <td class="text-end text-success">
+                                                        {% if applied_coupon_discount %}
+                                                            - ${{ applied_coupon_discount }}
+                                                        {% else %}
+                                                            $0
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                 <tr>
                                                      <td>Estimated Tax:</td>
                                                      <td class="text-end text-success">+ $ {{ estimated_tax|floatformat:0 }}</td>
                                                  </tr>

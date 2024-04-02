@@ -63,78 +63,80 @@
       </div>
       <div class="col-md-6">
         <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">{{ data.title }}</h4>
-            <p class="card-text"><strong>Category:</strong> {{ data.category.title }}</p>
-            <p class="card-text"><strong>Brand:</strong> {{ data.brand.title }}</p>
-            <p class="card-text"><strong>Description:</strong> {{ data.description }}</p>
-            <!-- <p class="card-text"><strong>Price:</strong> {{ data.price }}</p> -->
-            <!-- <p class="card-text"><strong>Old Price:</strong> {{ data.old_price }}</p> -->
-            {% if category_offers %}
-            <tr>
-              <td><b>Category Offer</b></td>
-              <td>
-                {% for offer in category_offers %}
-                {{ offer.percent_offer }}% offer valid from {{ offer.start_date }} to {{offer.end_date}}
-                {% endfor %}
-              </td>
-            </tr><br><br>
-            {% endif %}
-            {% if product_offer %}
-            <tr>
-              <td><b>Product Offer</b></td>
-              <td>
-                
-                {% for offer in product_offer %}
-                {{ offer.percent_offer }}% offer valid from {{ offer.start_date }} to {{ offer.end_date }}
-                {% endfor %}
-                {% else %}
-                <!-- <p>No offers available for this product</p> -->
-              </td>
-            </tr>
-            {% endif %}
-            <tr>
-              <tr>
-                <td>
-                  {% if product_offer %}
-                    <p><b>Price</b></p>
-                    
-                    <p>Original Price: $ {{ data.price }}</p>
-                    <p>Offer Price: $ {{  data.get_discounted_price|floatformat:"2" }}</p>
-                  {% else %}
-                    <p><b>Price</b></p>
-                    <p>Price: $ {{ data.price }}</p>
-                    <!-- <p>No offer</p> -->
-                  {% endif %}
-                </td>
-              </tr>
-              
-          </div>
-            <div class="mt-4">
-              <!-- Add to Cart Form -->
-              <form method="post" action="{% url 'add_to_cart' data.id %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary shadow-0">Add to Cart</button>
-              </form>
-
-              <!-- Add to Wishlist Form -->
-              <form method="post" action="{% url 'add_to_wishlist' data.id %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-light border px-2 pt-2 icon-hover addToWishlistBtn">
-                  <i class="fas fa-heart fa-lg px-1"></i> Add to Wishlist
-                </button>
-              </form>
+            <div class="card-body">
+                <h4 class="card-title">{{ data.title }}</h4>
+                <p class="card-text"><strong>Category:</strong> {{ data.category.title }}</p>
+                <p class="card-text"><strong>Brand:</strong> {{ data.brand.title }}</p>
+                <p class="card-text"><strong>Description:</strong> {{ data.description }}</p>
+                {% if category_offers %}
+                <tr>
+                    <td><b>Category Offer</b></td>
+                    <td>
+                        {% for offer in category_offers %}
+                        {{ offer.percent_offer }}% offer valid from {{ offer.start_date }} to {{offer.end_date}}
+                        {% endfor %}
+                    </td>
+                </tr><br><br>
+                {% endif %}
+                {% if product_offer %}
+                <tr>
+                    <td><b>Product Offer</b></td>
+                    <td>
+                        {% for offer in product_offer %}
+                        {{ offer.percent_offer }}% offer valid from {{ offer.start_date }} to {{ offer.end_date }}
+                        {% endfor %}
+                        {% else %}
+                        <!-- <p>No offers available for this product</p> -->
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <tr>
+                        <td>
+                            {% if product_offer %}
+                            <p><b>Price</b></p>
+                            
+                            <p>Original Price: $ {{ data.price }}</p>
+                            <p>Offer Price: $ {{  data.get_discounted_price|floatformat:"2" }}</p>
+                            {% else %}
+                            <p><b>Price</b></p>
+                            <p>Price: $ {{ data.price }}</p>
+                            <!-- <p>No offer</p> -->
+                            {% endif %}
+                        </td>
+                    </tr>
+    
             </div>
-
             <div class="mt-4">
-              {% if data.stock > 0 %}
-              <p><strong>Stock:</strong> {{ data.stock }}</p>
-              <!-- Additional details for available products can be added here -->
-              {% else %}
-              <p class="text-danger">Out of stock</p>
-              <!-- Additional details or button for out-of-stock products can be added here -->
-              {% endif %}
-              
+                <!-- Add to Cart Form -->
+                {% if data.active and data.brand.active and data.category.active %}
+                <!-- Add to Cart Form -->
+                <form method="post" action="{% url 'add_to_cart' data.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary shadow-0">Add to Cart</button>
+                </form>
+            
+                <!-- Add to Wishlist Form -->
+                <form method="post" action="{% url 'add_to_wishlist' data.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-light border px-2 pt-2 icon-hover addToWishlistBtn">
+                        <i class="fas fa-heart fa-lg px-1"></i> Add to Wishlist
+                    </button>
+                </form>
+            {% else %}
+                <p>Product Not Available</p>
+            {% endif %}
+            </div>
+    
+            <div class="mt-4">
+                {% if data.stock > 0 %}
+                <p style="color: rgb(41, 107, 41);"><strong>Stock: </strong> Product Available </p>
+                <!-- Additional details for available products can be added here -->
+                {% else %}
+                <p class="text-danger">Out of stock</p>
+                <!-- Additional details or button for out-of-stock products can be added here -->
+                {% endif %}
+    
           </div>
         </div>
       </div>

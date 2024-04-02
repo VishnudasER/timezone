@@ -1,9 +1,11 @@
 {% extends 'admin-side/base.html' %}
 {% block content %}
+<p>a</p>
+<p>a</p>
 <div class="card">
     <div class="card-body">
         <h3 class="card-title">Order ID: {{ returned.order_id }}</h3>
-        <p>Product Name : {{ returned.order.product.Product_Name }}</p>
+        <p>Product Name :{{ returned.returned_items.first.order_item.product.title }}</p>
         <p>Reason for Return : {{ returned.reason }}</p>
         <tr>
             <th>Order Status : </th>

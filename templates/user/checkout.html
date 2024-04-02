@@ -415,7 +415,7 @@
             <div class="col-xl-4">
                 <div class="card checkout-order-summary">
                     <div class="card-body">
-                        <p class="lead">Wallet balance: <b>${{ wallet_balance }}</b> </p>
+                        <p class="lead">Wallet balance: <b>${{ wallet_balance|floatformat:0 }}</b> </p>
 
                         <div class="p-3 bg-light mb-3">
                             <h5 class="font-size-16 mb-0">Order Summary <span class="float-end ms-2"></span></h5>
@@ -454,6 +454,19 @@
                                         + $ {{ estimated_tax|floatformat:0 }}
                                     </td>>
                                 </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="font-size-14 m-0">Coupon Discount:</h5>
+                                    </td>
+                                    <td>
+                                        {% if applied_coupon_discount %}
+                                    - {{ applied_coupon_discount }}
+                                     {% else %}
+                                     $0
+                                            {% endif %}
+                                    </td>
+                                </tr>
+                                
                                 <tr class="bg-light">
                                     <td colspan="2">
                                         <h5 class="font-size-14 m-0">Total:</h5>
@@ -462,6 +475,8 @@
                                         ${{new_price|floatformat:0}}
                                     </td>
                                 </tr>
+                              
+                                
 
                                 </tbody>
                             </table>

@@ -91,6 +91,7 @@ DATABASES = {
 
 DATABASES["default"] = dj_database_url.parse("postgres://mysuperuser:0f2rAVNRos7XQ59H60RTEA3rqr4apAes@dpg-co1guri0si5c73coiin0-a.oregon-postgres.render.com/backendcourse_qqqc")
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

@@ -34,6 +34,9 @@ def add_to_cart(request, uid):
         return redirect('login_perform')
 
     product = get_object_or_404(Product, id=uid)
+    if not (product.active and product.brand.active and product.category.active):
+        messages.error(request, f"{product.title} is unavailable.")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
     if product.stock == 0:
         messages.error(request, f"{product.title} is out of stock.")
     elif CartItem.objects.filter(product=product, user=request.user).exists():
@@ -141,25 +144,18 @@ def update_quantity(request, cart_item_id, action):
 
 @login_required(login_url='login_perform')
 def checkout(request):
-    # Fetch user's cart items
     cart_items = CartItem.objects.filter(user=request.user)
-
-    # Recalculate total cart price based on the updated quantity
     total_cart_price = sum(item.total_price() for item in cart_items)
 
-    # Fetch user addresses
     user_addresses = Address.objects.filter(user=request.user)
-
-    # Calculate discount, shipping charge, and estimated tax based on your logic
-    discount_amount = Decimal('0.01') * total_cart_price  # 1% discount
-    shipping_charge = Decimal('0.005') * total_cart_price  # 0.5% shipping charge
-    estimated_tax = Decimal('0.02') * total_cart_price  # 2% estimated tax
-
-    # Calculate the new price after applying discounts, charges, and tax
+    discount_amount = Decimal('0.01') * total_cart_price  
+    shipping_charge = Decimal('0.005') * total_cart_price 
+    estimated_tax = Decimal('0.02') * total_cart_price  
     new_price = total_cart_price - discount_amount + shipping_charge + estimated_tax
-    request.session['new_price'] = str(new_price)  # Convert Decimal to string before saving
+    request.session['new_price'] = str(new_price) 
 
-    # Handle coupon form submission
+    applied_coupon_discount = Decimal('0.00')  # Initialize applied coupon discount to 0
+
     if request.method == 'POST':
         coupon_form = CouponForm(request.POST)
         if coupon_form.is_valid():
@@ -171,33 +167,26 @@ def checkout(request):
                     current_time = datetime.now()
                     coupon = Coupon.objects.get(coupon_code=code, is_expired__gte=current_time, active=True)
                     discounted_price = new_price - coupon.discount_price
-                    
+
                     if discounted_price >= 0:
                         new_price = discounted_price
-                        request.session['coupon'] = code
-                        request.session['discount_price'] = str(coupon.discount_price)  # Convert Decimal to string
-                        request.session['new_price'] = str(new_price)  # Convert Decimal to string
+                        applied_coupon_discount = coupon.discount_price  
+                        request.session['applied_coupon_discount'] = applied_coupon_discount
+                        request.session['discount_price'] = str(coupon.discount_price)  
+                        request.session['new_price'] = str(new_price)  
                         messages.success(request, f'Coupon {code} applied successfully!')
                     else:
                         messages.error(request, f"The coupon {code} cannot reduce the total below zero.")
                 except Coupon.DoesNotExist:
                     messages.error(request, 'Invalid coupon code.')
 
-    # Ensure there is at least one address for the user
-    # if not user_addresses.exists():
-    #     messages.warning(request, 'Please add an address before proceeding to checkout.')
-    #     return redirect('add_address')
-
-    # Check for out of stock or inactive products in the cart
     for cart_item in cart_items:
-        if cart_item.quantity > cart_item.product.stock or not cart_item.product.active:
+        if cart_item.quantity > cart_item.product.stock or not (cart_item.product.active and cart_item.product.brand.active and cart_item.product.category.active):
             messages.error(request, f'{cart_item.product.title} is out of stock or inactive.')
+            cart_item.delete()
             return redirect('cart')
 
-    # Pass the first address to the template as the default shipping address
     default_address = user_addresses.first()
-
-    # Fetch user's wallet balance
     wallet_balance = Wallet.objects.filter(user=request.user).aggregate(total_balance=Sum(
         Case(
             When(balance_type=Wallet.DEBIT, then=F('amount') * -1),
@@ -206,7 +195,6 @@ def checkout(request):
         )
     ))['total_balance'] or Decimal('0.00')
 
-    # Prepare context for rendering the checkout template
     context = {
         'cart_items': cart_items,
         'user_addresses': user_addresses,
@@ -217,10 +205,12 @@ def checkout(request):
         'default_address': default_address,
         'new_price': new_price,
         'wallet_balance': wallet_balance,
-        'coupon_form': CouponForm()  
+        'coupon_form': CouponForm(),
+        'applied_coupon_discount': applied_coupon_discount,  # Pass applied coupon discount to the template
     }
 
     return render(request, 'user/checkout.html', context)
+
 
 
 @login_required(login_url='login_perform')
@@ -229,8 +219,15 @@ def wishlist(request):
     return render(request,'user/wishlist.html',{'wish':wish})
 
 @login_required(login_url='login_perform')
+
 def add_to_wishlist(request, id):
+    
     product = get_object_or_404(Product, id=id)
+    
+    if not (product.active and product.brand.active and product.category.active):
+        messages.error(request, f'{product.title} is unavailable.')
+        return redirect('wishlist') 
+    
     wishlist_item, created = Wishlist.objects.get_or_create(product=product, user=request.user)
 
     if not created:
@@ -399,10 +396,23 @@ def cancel_order(request, order_id):
             item.product.stock += item.quantity
             item.product.save()
 
+        # Calculate the total amount of the order
+        if order.billing_status != 'COD':
+            # Calculate the total amount of the order
+            total_amount = sum(item.product.price * item.quantity for item in order_items)
+
+            # Create a Wallet entry to credit the amount back
+            Wallet.objects.create(user=order.user, amount=total_amount, balance_type=Wallet.CREDIT)
+            messages.success(request, 'Order cancelled. Amount credited to wallet.')
+        else:
+            messages.info(request, 'COD selected. Amount not credited to wallet.')
+
         # Change order status and set it to cancelled
         order.active = False
         order.status = 'cancelled'
         order.save()
+    else:
+        messages.error(request, 'This order cannot be cancelled.')
 
     return redirect('order_listing')
 
@@ -432,7 +442,6 @@ def return_order(request, order_id):
 
     return render(request, 'user/returnorder.html', {'order': order, 'existing_return': existing_return})
 
-
 @login_required(login_url='login_perform')
 def order_detailview(request, id):
     # Retrieve the order object based on the provided id
@@ -442,14 +451,19 @@ def order_detailview(request, id):
     user_addresses = Address.objects.filter(user=request.user)
 
     total_order_price = sum(item.price * item.quantity for item in order.items.all())
+    
+    # Retrieve applied coupon discount from session if it exists
+    applied_coupon_discount = request.session.get('applied_coupon_discount', Decimal('0'))
 
     # Calculate discount, shipping charge, and estimated tax based on your logic
     discount_amount = Decimal('0.01') * total_order_price  # 1% discount
     shipping_charge = Decimal('0.005') * total_order_price  # 0.5% shipping charge
     estimated_tax = Decimal('0.02') * total_order_price  # 2% estimated tax
-    new_price = total_order_price - discount_amount + shipping_charge + estimated_tax
     
-    print('selected address',selected_address)
+    # Update the new_price including the applied_coupon_discount
+    new_price = total_order_price - discount_amount + shipping_charge + estimated_tax - applied_coupon_discount
+    
+    print('selected address', selected_address)
 
     return render(request, 'user/trackorder.html', {
         'order': order,
@@ -459,7 +473,8 @@ def order_detailview(request, id):
         'discount_amount': discount_amount,
         'shipping_charge': shipping_charge,
         'estimated_tax': estimated_tax,
-        'new_price': new_price,
+        'applied_coupon_discount': applied_coupon_discount,
+        'new_price': new_price  # Pass the new_price to the template
     })
 
 @login_required

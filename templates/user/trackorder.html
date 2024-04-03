@@ -252,7 +252,7 @@
                                                      <th>Total :</th>
                                                      <td class="text-end">
                                                          <span class="fw-bold">
-                                                             <b>$  {{ request.session.new_price|floatformat:0 }}</b>
+                                                             <b>$  {{ new_price|floatformat:0 }}</b>
                                                          </span>
                                                      </td>
                                                  </tr>
@@ -277,7 +277,7 @@
                 <div class="table-responsive">
                     <table class="table mb-0">
                         <tbody>
-                            <p class="text-uppercase small"><strong>Name:</strong> {{ selected_address.first_name }}{{ selected_address.last_name }}</p>
+                            <p class="text-uppercase small"><strong>Name:</strong> {{ selected_address.first_name }} {{ selected_address.last_name }}</p>
                             <p   ><strong>Address:</strong>{{ selected_address.address }}</p>
                             <p><strong>Address 1:</strong> {{ selected_address.address1 }}</p>
                             <p><strong>City: </strong>{{selected_address.city }}</p>

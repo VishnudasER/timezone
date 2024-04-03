@@ -446,18 +446,26 @@ def order(request):
     return render(request, 'admin-side/admin_orderview.html', {'orders': orders, 'title': 'Order'})
 
 @superadmin_required
-def order_view(request,order_id):
+def order_view(request, order_id):
     order = Order.objects.get(id=order_id)
     order_items = OrderItem.objects.filter(order=order)
     order_status_choices = [
         (status, status_display) for status, status_display in Order.ORDER_STATUS_CHOICES if status != 'returned'
     ]
-    context = {'title':'Order Details',
-             'order':order,
-             'order_items':order_items,
-             'order_status_choices':order_status_choices}
-    return render(request,'admin-side/order_view.html',context)
 
+    # Retrieve applied coupon discount from the session
+    applied_coupon_discount = Decimal('0.00')
+    if 'applied_coupon_discount' in request.session:
+        applied_coupon_discount = Decimal(request.session['applied_coupon_discount'])
+
+    context = {
+        'title': 'Order Details',
+        'order': order,
+        'order_items': order_items,
+        'order_status_choices': order_status_choices,
+        'applied_coupon_discount': applied_coupon_discount,  # Pass applied coupon discount to the template
+    }
+    return render(request, 'admin-side/order_view.html', context)
 
 
 def order_update(request, order_id):
@@ -517,6 +525,7 @@ def returned_details(request, id):
             if new_status == returned.RETURNED:
                 order.status = order.RETURNED
                 order.save()
+                returned.received_at = timezone.now()
                 
             order_items = OrderItem.objects.filter(order=order)
             for item in order_items:

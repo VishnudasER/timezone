@@ -19,6 +19,7 @@
                         <th>Total Paid</th>
                         <th>Billing Status</th>
                         <th>Status</th>
+                        <th>Coupon Discount</th>
                         <th>Product</th>
                         <th>Action</th>
                     </tr>
@@ -31,6 +32,13 @@
                             <td>{{ order.total_paid }}</td>
                             <td>{{ order.billing_status }}</td>
                             <td>{{ order.status }}</td>
+                            <td>
+                                {% if order.applied_coupon_discount %}
+                                    ${{ order.applied_coupon_discount }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </td>
                             <td>
                                 <ul>
                                     {% for item in order.items.all %}

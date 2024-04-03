@@ -25,8 +25,8 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name='order_user', null=True,blank=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.DO_NOTHING, related_name='order_user', null=True,blank=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     total_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -56,6 +56,32 @@ class Order(models.Model):
 
     def str(self):
         return f"{self.created} - {self.status}"
+    
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # If it's a new order, create a copy of the address
+            original_address = self.address
+            self.address = None  # Set address to None to avoid issues with CASCADE
+            super().save(*args, **kwargs)
+            if original_address:
+                # Create a copy of the original address
+                copied_address = Address.objects.create(
+                    user=original_address.user,
+                    first_name=original_address.first_name,
+                    last_name=original_address.last_name,
+                    address=original_address.address,
+                    address1=original_address.address1,
+                    city=original_address.city,
+                    zipcode=original_address.zipcode,
+                    phone=original_address.phone,
+                    active=False    
+                )
+                self.address = copied_address
+                super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+    
 
 
 class OrderItem(models.Model):

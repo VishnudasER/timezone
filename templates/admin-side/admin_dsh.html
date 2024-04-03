@@ -11,9 +11,12 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static '/img/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <style>
+    #myChart {
+        max-width: 600px; /* Adjust the maximum width as needed */
+        margin: 0 auto; /* Center the chart horizontally */
+    }
     table {
         width: 100%;
         border-collapse: collapse;
@@ -96,7 +99,8 @@
         <!-- Add more options as needed -->
     </select>
     
-    <canvas id="myChart"></canvas>
+    <canvas id="myChart" width="800" height="500"></canvas>
+
     <!-- <span>Category :</span> -->
     <!-- <canvas id="myCategory" width="400" height="200"></canvas> -->
    
@@ -155,6 +159,7 @@
                 <td>{{ brand.total_sales }}</td>
             </tr>
             {% endfor %}
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         </tbody>
     </table>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>

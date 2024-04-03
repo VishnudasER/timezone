@@ -24,6 +24,15 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A3
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from reportlab.lib import colors
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.lib import colors
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from .models import Order
 
 
 @never_cache
@@ -142,12 +151,13 @@ def update_quantity(request, cart_item_id, action):
 
     return JsonResponse({'success': True, 'total_price': total_price, 'quantity': cart_item.quantity})
 
+
 @login_required(login_url='login_perform')
 def checkout(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total_cart_price = sum(item.total_price() for item in cart_items)
 
-    user_addresses = Address.objects.filter(user=request.user)
+    user_addresses = Address.objects.filter(user=request.user, active=True)
     discount_amount = Decimal('0.01') * total_cart_price  
     shipping_charge = Decimal('0.005') * total_cart_price 
     estimated_tax = Decimal('0.02') * total_cart_price  
@@ -286,12 +296,13 @@ def place_order(request):
                 messages.error(request, 'Orders above $10000 are not allowed cash on delivery.')
                 return redirect('checkout')
             else:
-                order = Order.objects.create(
+                order = Order(
                     user=request.user,
                     address=address,
                     total_paid=new_price,
                     billing_status=payment_method,
                 )
+                order.save()
                 print('order', order)
                 print('orderadd', order.address)
 
@@ -305,6 +316,7 @@ def place_order(request):
                     product.save()
 
                 cart.delete()
+              
                 return render(request, 'user/ordersuccess.html', {'order_id': order.id})
 
         elif payment_method == 'Wallet':
@@ -314,8 +326,9 @@ def place_order(request):
 
             if wallet_balance > float(new_price):
                 coupon = request.session.get('coupon')
-                order = Order.objects.create(user=user, address=address, total_paid=new_price,
+                order = Order(user=user, address=address, total_paid=new_price,
                                              billing_status=payment_method, paid=True)
+                order.save()
                 Applied_coupon.objects.create(user=user, coupon=coupon)
                 amount = order.total_paid if order.total_paid is not None else 0
                 Wallet.objects.create(user=user, amount=order.total_paid, balance_type=Wallet.DEBIT)
@@ -444,7 +457,7 @@ def return_order(request, order_id):
 
 @login_required(login_url='login_perform')
 def order_detailview(request, id):
-    # Retrieve the order object based on the provided id
+    
     order = Order.objects.get(id=id)
     order_name = get_object_or_404(Order, id=id)
     selected_address = order.address
@@ -452,15 +465,18 @@ def order_detailview(request, id):
 
     total_order_price = sum(item.price * item.quantity for item in order.items.all())
     
-    # Retrieve applied coupon discount from session if it exists
-    applied_coupon_discount = request.session.get('applied_coupon_discount', Decimal('0'))
-
-    # Calculate discount, shipping charge, and estimated tax based on your logic
-    discount_amount = Decimal('0.01') * total_order_price  # 1% discount
-    shipping_charge = Decimal('0.005') * total_order_price  # 0.5% shipping charge
-    estimated_tax = Decimal('0.02') * total_order_price  # 2% estimated tax
+    applied_coupon_discount = Decimal('0.00')
     
-    # Update the new_price including the applied_coupon_discount
+    if 'applied_coupon_discount' in request.session:
+        applied_coupon_discount = Decimal(request.session['applied_coupon_discount'])
+
+    if applied_coupon_discount == Decimal('0.00'):
+        request.session['applied_coupon_discount'] = '0.00'
+
+    discount_amount = Decimal('0.01') * total_order_price  
+    shipping_charge = Decimal('0.005') * total_order_price 
+    estimated_tax = Decimal('0.02') * total_order_price  
+    
     new_price = total_order_price - discount_amount + shipping_charge + estimated_tax - applied_coupon_discount
     
     print('selected address', selected_address)
@@ -474,8 +490,11 @@ def order_detailview(request, id):
         'shipping_charge': shipping_charge,
         'estimated_tax': estimated_tax,
         'applied_coupon_discount': applied_coupon_discount,
-        'new_price': new_price  # Pass the new_price to the template
+        'new_price': new_price  
     })
+
+
+    
 
 @login_required
 def wallet(request):
@@ -484,20 +503,20 @@ def wallet(request):
     return render(request, 'user/wallet.html', {'wallet': wallet, 'total_balance':total_balance})
 
 def paymentsuccessful(request,address):
-    print("sfsdfdgdgdfghdfhdfhdfhfcgbcbhcvbbb")
     user_address=Address.objects.get(id=address)
     cart =CartItem.objects.filter(user=request.user)
     total_cart_price = sum(item.total_price() for item in cart)
     coupon = request.session.get('coupon')
     Applied_coupon.objects.create(user=request.user, coupon=coupon)
     
-    order = Order.objects.create(
+    order = Order(
             user=request.user,
             address=user_address,
             total_paid=total_cart_price,
             billing_status='paypal',
             paid=True
             )
+    order.save()
     for item in cart:
         product = item.product
         quantity = item.quantity
@@ -508,6 +527,7 @@ def paymentsuccessful(request,address):
         product.stock -= x
         product.save()
     cart.delete()
+  
     
     return render(request,'user/ordersuccess.html', {'order_id': order.id})
 
@@ -515,15 +535,6 @@ def paymentsuccessful(request,address):
 def base2(request):
     return render(request,'admin/base2.html')
 
-from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
-from reportlab.lib import colors
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from .models import Order
 
 def generate_invoice_pdf(order, selected_address, current_date):
     buffer = BytesIO()
@@ -618,3 +629,4 @@ def download_invoice(request, id):
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="invoice_{order.id}.pdf"'
     return response
+

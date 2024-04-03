@@ -10,7 +10,7 @@
                     <h5 class="card-title">Order Information</h5>
                     <p><strong>Order ID:</strong> {{ order.id }}</p>
                     <p><strong>User:</strong> {{ order.user }}</p>
-                    <p><strong>Address:</strong> {{ order.address.address1 }}</p>
+                    <p><strong>Address:</strong> {{ selected_address.first_name }}</p>
                     <p><strong>Created:</strong> {{ order.created }}</p>
                     <p><strong>Total Paid:</strong> {{ order.total_paid }}</p>
                     <p><strong>Billing Status:</strong> {{ order.billing_status }}</p>

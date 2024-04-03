@@ -319,7 +319,7 @@ def products_view(request):
 
 def user_profile(request):
     try:
-        address = Address.objects.filter(user=request.user)
+        address = Address.objects.filter(user=request.user, active = True)
         return render(request, 'user/userprofile.html', {'address': address})
     except Exception as e:
         print(f"An error occurred: {str(e)}")

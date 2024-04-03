@@ -11,6 +11,7 @@ class Address(models.Model):
     city = models.CharField(max_length=100, null=True, blank=True)
     zipcode = models.IntegerField(null=True, blank=True)
     phone = models.BigIntegerField(null=True, blank=True)
+    active = models.BooleanField(default = True)
 
 
     class Meta:

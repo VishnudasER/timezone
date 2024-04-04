@@ -34,6 +34,7 @@ class Order(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
     active = models.BooleanField(default=True)
     paid = models.BooleanField(default=False)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default = 0)
     
     # New field for order status
     RETURNED ='returned'

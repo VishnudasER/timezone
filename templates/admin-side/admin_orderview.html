@@ -33,11 +33,7 @@
                             <td>{{ order.billing_status }}</td>
                             <td>{{ order.status }}</td>
                             <td>
-                                {% if order.applied_coupon_discount %}
-                                    ${{ order.applied_coupon_discount }}
-                                {% else %}
-                                    0
-                                {% endif %}
+                              {{ order.discount_price}}
                             </td>
                             <td>
                                 <ul>

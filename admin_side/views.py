@@ -517,6 +517,8 @@ def returnedorders(request):
 @superadmin_required
 def returned_details(request, id):
     returned = Returnedproduct.objects.get(id=id)
+    returned_items = OrderItem.objects.filter(order=returned.order_id)
+    print(returned_items.values())
     if request.method == 'POST':
         new_status = request.POST.get('status')
         if new_status:
@@ -536,7 +538,7 @@ def returned_details(request, id):
             returned.save()
             
             return redirect('returned_details', id=id)
-    return render(request, "admin-side/return_view.html", {'returned':returned,'title':'Returned Order Details'})
+    return render(request, "admin-side/return_view.html", {'returned':returned, 'returned_items': returned_items, 'title':'Returned Order Details'})
 
 
 

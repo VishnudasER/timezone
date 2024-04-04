@@ -163,13 +163,15 @@ def checkout(request):
     estimated_tax = Decimal('0.02') * total_cart_price  
     new_price = total_cart_price - discount_amount + shipping_charge + estimated_tax
     request.session['new_price'] = str(new_price) 
+    request.session['discount_price'] = 0
 
-    applied_coupon_discount = Decimal('0.00')  # Initialize applied coupon discount to 0
+    applied_coupon_discount = Decimal('0.00')  
 
     if request.method == 'POST':
         coupon_form = CouponForm(request.POST)
         if coupon_form.is_valid():
             code = coupon_form.cleaned_data['code']
+            
             if Applied_coupon.objects.filter(user=request.user, coupon=code).exists():
                 messages.error(request, f"The Coupon {code} is Already used before")
             else:
@@ -301,6 +303,7 @@ def place_order(request):
                     address=address,
                     total_paid=new_price,
                     billing_status=payment_method,
+                    discount_price = discount_price
                 )
                 order.save()
                 print('order', order)
@@ -316,7 +319,7 @@ def place_order(request):
                     product.save()
 
                 cart.delete()
-              
+                del request.session['discount_price']
                 return render(request, 'user/ordersuccess.html', {'order_id': order.id})
 
         elif payment_method == 'Wallet':
@@ -327,7 +330,7 @@ def place_order(request):
             if wallet_balance > float(new_price):
                 coupon = request.session.get('coupon')
                 order = Order(user=user, address=address, total_paid=new_price,
-                                             billing_status=payment_method, paid=True)
+                                             billing_status=payment_method, paid=True,  discount_price = discount_price)
                 order.save()
                 Applied_coupon.objects.create(user=user, coupon=coupon)
                 amount = order.total_paid if order.total_paid is not None else 0
@@ -343,6 +346,7 @@ def place_order(request):
                     product.save()
 
                 cart.delete()
+                del request.session['discount_price']
                 return render(request, 'user/ordersuccess.html', {'order_id': order.id})
 
             else:
@@ -467,17 +471,12 @@ def order_detailview(request, id):
     
     applied_coupon_discount = Decimal('0.00')
     
-    if 'applied_coupon_discount' in request.session:
-        applied_coupon_discount = Decimal(request.session['applied_coupon_discount'])
-
-    if applied_coupon_discount == Decimal('0.00'):
-        request.session['applied_coupon_discount'] = '0.00'
-
+   
     discount_amount = Decimal('0.01') * total_order_price  
     shipping_charge = Decimal('0.005') * total_order_price 
     estimated_tax = Decimal('0.02') * total_order_price  
     
-    new_price = total_order_price - discount_amount + shipping_charge + estimated_tax - applied_coupon_discount
+    new_price = total_order_price - discount_amount + shipping_charge + estimated_tax - order.discount_price
     
     print('selected address', selected_address)
 
@@ -507,6 +506,7 @@ def paymentsuccessful(request,address):
     cart =CartItem.objects.filter(user=request.user)
     total_cart_price = sum(item.total_price() for item in cart)
     coupon = request.session.get('coupon')
+    discount_price = request.session.get('discount_price')
     Applied_coupon.objects.create(user=request.user, coupon=coupon)
     
     order = Order(
@@ -514,7 +514,8 @@ def paymentsuccessful(request,address):
             address=user_address,
             total_paid=total_cart_price,
             billing_status='paypal',
-            paid=True
+            paid=True,
+            discount_price = discount_price
             )
     order.save()
     for item in cart:
@@ -527,7 +528,7 @@ def paymentsuccessful(request,address):
         product.stock -= x
         product.save()
     cart.delete()
-  
+    del request.session['discount_price']
     
     return render(request,'user/ordersuccess.html', {'order_id': order.id})
 
@@ -536,7 +537,7 @@ def base2(request):
     return render(request,'admin/base2.html')
 
 
-def generate_invoice_pdf(order, selected_address, current_date):
+def generate_invoice_pdf(order, selected_address, current_date, coupon_discount):
     buffer = BytesIO()
     pdf = SimpleDocTemplate(buffer, pagesize=A4)
 
@@ -597,9 +598,10 @@ def generate_invoice_pdf(order, selected_address, current_date):
     content.append(address_table)
 
     total_price_paragraph = Paragraph(f"<strong>Total Price:</strong> ${order.total_paid}", styles['Normal'])
+    coupon_discount_paragraph = Paragraph(f"<strong>Coupon Discount:</strong> ${coupon_discount}", styles['Normal'])  # Add coupon discount
     order_date_paragraph = Paragraph(f"<strong>Order Date:</strong> {order.created}", styles['Normal'])
     invoice_date_paragraph = Paragraph(f"<strong>Invoice Date:</strong> {current_date}", styles['Normal'])
-    content.extend([total_price_paragraph, order_date_paragraph, invoice_date_paragraph])
+    content.extend([total_price_paragraph, coupon_discount_paragraph, order_date_paragraph, invoice_date_paragraph])  # Include coupon discount
 
     # Build PDF
     pdf.build(content)
@@ -621,12 +623,14 @@ def download_invoice(request, id):
     # Get the selected address
     selected_address = order.address
 
+    # Determine coupon discount
+    applied_coupon_discount = order.discount_price if order.discount_price is not None else Decimal('0.00')
+
     # Generate PDF content for the invoice
     current_date = timezone.now().strftime('%Y-%m-%d')
-    pdf_content = generate_invoice_pdf(order, selected_address, current_date)
+    pdf_content = generate_invoice_pdf(order, selected_address, current_date, applied_coupon_discount)
 
     # Create HTTP response with PDF as attachment
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="invoice_{order.id}.pdf"'
     return response
-

@@ -237,11 +237,7 @@
                                                  <tr>
                                                     <td>Coupon Discount :</td>
                                                     <td class="text-end text-success">
-                                                        {% if applied_coupon_discount %}
-                                                            - ${{ applied_coupon_discount }}
-                                                        {% else %}
-                                                            $0
-                                                        {% endif %}
+                                                      $ {{ item.order.discount_price }}
                                                     </td>
                                                 </tr>
                                                  <tr>

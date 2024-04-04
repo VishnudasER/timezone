@@ -506,7 +506,8 @@ def paymentsuccessful(request,address):
     cart =CartItem.objects.filter(user=request.user)
     total_cart_price = sum(item.total_price() for item in cart)
     coupon = request.session.get('coupon')
-    discount_price = request.session.get('discount_price')
+    discount_price = request.session.get('discount_price', 0)
+  
     Applied_coupon.objects.create(user=request.user, coupon=coupon)
     
     order = Order(

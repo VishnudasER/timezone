@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['54.206.120.214','timezone.today','www.timezone.today']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
